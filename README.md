@@ -1,5 +1,4 @@
 
-
 # ez-canvas
 A JavaScript library for creating animations simply within HTML5 canvas
 
@@ -17,6 +16,7 @@ Run `npm run build` to get started. This will install node dependencies and buil
 
 Usage
 ---
+*For more information please refer to the wiki*
 
 To get started, you first need to import the repository and create a new canvas
 ```javascript
