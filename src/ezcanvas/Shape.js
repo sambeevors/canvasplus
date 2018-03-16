@@ -2,9 +2,9 @@
 class Shape {
   constructor (params) {
     this.type
-    this.canvases = params.canvases
+    this.animations = params.animations
     this.GCO = (typeof params.GCO === 'string') ? params.GCO : 'source-over'
-    this.canvas = (typeof params.canvas === 'number') ? params.canvas : 0
+    this.animation = (typeof params.animation === 'number') ? params.animation : 0
 
     // Start position must be specified, end position defaults to start
     if (typeof params.position.start === 'object' && typeof params.position.end === 'object' || typeof params.position.end === 'undefined') {
@@ -68,19 +68,19 @@ class Shape {
 
   // Work out current position based on progress
   currentPosition (p) {
-    const x = this.pos.start[0] + (this.pos.end[0] - this.pos.start[0]) * this.canvases[this.canvas].easing(p)
-    const y = this.pos.start[1] + (this.pos.end[1] - this.pos.start[1]) * this.canvases[this.canvas].easing(p)
+    const x = this.pos.start[0] + (this.pos.end[0] - this.pos.start[0]) * this.animations[this.animation].easing(p)
+    const y = this.pos.start[1] + (this.pos.end[1] - this.pos.start[1]) * this.animations[this.animation].easing(p)
     return [x, y]
   }
 
   // Work out current rotation based on progress
   currentRotation (p) {
-    return this.rot.start + (this.rot.end - this.rot.start) * this.canvases[this.canvas].easing(p)
+    return this.rot.start + (this.rot.end - this.rot.start) * this.animations[this.animation].easing(p)
   }
 
   // Work out current opacity based on progress
   currentOpacity (p) {
-    return this.opacity.start + (this.opacity.end - this.opacity.start) * this.canvases[this.canvas].easing(p)
+    return this.opacity.start + (this.opacity.end - this.opacity.start) * this.animations[this.animation].easing(p)
   }
 }
 
@@ -95,7 +95,7 @@ class Circle extends Shape {
   // Work out current scale based on progress
   currentScale (p) {
     if (this.scale.start !== this.scale.end) {
-      return this.r + this.r * ((this.scale.start + (this.scale.end - this.scale.start)) * this.canvases[this.canvas].easing(p) - this.canvases[this.canvas].easing(p))
+      return this.r + this.r * ((this.scale.start + (this.scale.end - this.scale.start)) * this.animations[this.animation].easing(p) - this.animations[this.animation].easing(p))
     }
 
     return this.r * this.scale.start
@@ -103,7 +103,7 @@ class Circle extends Shape {
 
   // Draw the circle on the canvas
   draw (pos, r) {
-    this.canvases[this.canvas].ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI)
+    this.animations[this.animation].ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI)
   }
 }
 
@@ -122,8 +122,8 @@ class Rectangle extends Shape {
     let h = this.h * this.scale.start
 
     if (this.scale.start !== this.scale.end) {
-      w = this.w + this.w * ((this.scale.start + (this.scale.end - this.scale.start)) * this.canvases[this.canvas].easing(p) - this.canvases[this.canvas].easing(p))
-      h = this.h + this.h * ((this.scale.start + (this.scale.end - this.scale.start)) * this.canvases[this.canvas].easing(p) - this.canvases[this.canvas].easing(p))
+      w = this.w + this.w * ((this.scale.start + (this.scale.end - this.scale.start)) * this.animations[this.animation].easing(p) - this.animations[this.animation].easing(p))
+      h = this.h + this.h * ((this.scale.start + (this.scale.end - this.scale.start)) * this.animations[this.animation].easing(p) - this.animations[this.animation].easing(p))
     }
 
     return [w, h]
@@ -131,7 +131,7 @@ class Rectangle extends Shape {
 
   // Draw the rectangle on the canvas
   draw (pos, wh) {
-    this.canvases[this.canvas].ctx.rect(pos[0], pos[1], wh[0], wh[1])
+    this.animations[this.animation].ctx.rect(pos[0], pos[1], wh[0], wh[1])
   }
 }
 

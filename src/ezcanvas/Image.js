@@ -18,6 +18,8 @@ export default class CanvasImage {
     this.image.src = (typeof params.src === 'string') ? params.src : 'http://placehold.it/500x500?text=Image+Must+Be+A+String'
     this.canvases = params.canvases
     this.canvas = (typeof params.canvas === 'number') ? params.canvas : 0
+    this.animations = params.animations
+    this.animation = (typeof params.animation === 'number') ? params.animation : 0
 
     // Start position must be specified, end position defaults to start
     if (typeof params.position.start === 'object' && typeof params.position.end === 'object' || typeof params.position.end === 'undefined') {
@@ -81,14 +83,14 @@ export default class CanvasImage {
 
   // Work out current position based on progress
   currentPosition (p) {
-    const x = this.pos.start[0] + (this.pos.end[0] - this.pos.start[0]) * this.canvases[this.canvas].easing(p)
-    const y = this.pos.start[1] + (this.pos.end[1] - this.pos.start[1]) * this.canvases[this.canvas].easing(p)
+    const x = this.pos.start[0] + (this.pos.end[0] - this.pos.start[0]) * this.animations[this.animation].easing(p)
+    const y = this.pos.start[1] + (this.pos.end[1] - this.pos.start[1]) * this.animations[this.animation].easing(p)
     return [x, y]
   }
 
   // Work out current rotation based on progress
   currentRotation (p) {
-    return this.rot.start + (this.rot.end - this.rot.start) * this.canvases[this.canvas].easing(p)
+    return this.rot.start + (this.rot.end - this.rot.start) * this.animations[this.animation].easing(p)
   }
 
   // Work out current scale based on progress
@@ -97,8 +99,8 @@ export default class CanvasImage {
     let h = this.h * this.scale.start
 
     if (this.scale.start !== this.scale.end) {
-      w = this.w + this.w * ((this.scale.start + (this.scale.end - this.scale.start)) * this.canvases[this.canvas].easing(p) - this.canvases[this.canvas].easing(p))
-      h = this.h + this.h * ((this.scale.start + (this.scale.end - this.scale.start)) * this.canvases[this.canvas].easing(p) - this.canvases[this.canvas].easing(p))
+      w = this.w + this.w * ((this.scale.start + (this.scale.end - this.scale.start)) * this.animations[this.animation].easing(p) - this.animations[this.animation].easing(p))
+      h = this.h + this.h * ((this.scale.start + (this.scale.end - this.scale.start)) * this.animations[this.animation].easing(p) - this.animations[this.animation].easing(p))
     }
 
     return [w, h]
@@ -106,6 +108,6 @@ export default class CanvasImage {
 
   // Work out current opacity based on progress
   currentOpacity (p) {
-    return this.opacity.start + (this.opacity.end - this.opacity.start) * this.canvases[this.canvas].easing(p)
+    return this.opacity.start + (this.opacity.end - this.opacity.start) * this.animations[this.animation].easing(p)
   }
 }

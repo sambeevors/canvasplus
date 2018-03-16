@@ -1,6 +1,6 @@
 'use strict'
 
-import Animation from './ezcanvas/Animation.js'
+import { Canvas, Animation } from './ezcanvas/Animation.js'
 import { Circle, Rectangle } from './ezcanvas/Shape.js'
 import CanvasImage from './ezcanvas/Image.js'
 import Color from 'color'
@@ -153,6 +153,16 @@ const EZCanvas = (() => {
       canvases.push(new Animation(obj))
     },
 
+    addAnimation: obj => {
+      // Make sure we know which canvas we're adding the animatio to
+      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
+        obj.canvases = canvases
+        canvases[obj.canvas].animations.push(new Animation(obj))
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
     // Add a new shape
     addShape: obj => {
       // Make sure we know which canvas we're adding the shape to
@@ -161,13 +171,14 @@ const EZCanvas = (() => {
         // Make sure we're creating a valid shape
         if (typeof obj['shape'] === 'string') {
           obj.canvases = canvases
+          obj.animations = animations
           switch (obj['shape']) {
             case 'circ':
-              canvases[canvas].shapes.push(new Circle(obj))
+              canvases[canvas].animations[animation].shapes.push(new Circle(obj))
               break
 
             case 'rect':
-              canvases[canvas].shapes.push(new Rectangle(obj))
+              canvases[canvas].animations[animation].shapes.push(new Rectangle(obj))
               break
 
             default:
@@ -186,53 +197,66 @@ const EZCanvas = (() => {
       // Make sure we know which canvas we're adding the image to
       if (typeof obj.canvas === 'number' || canvases.length <= 1) {
         obj.canvases = canvases
-        canvases[obj.canvas].images.push(new CanvasImage(obj))
+        canvases[obj.canvas].animations[obj.animation].images.push(new CanvasImage(obj))
       } else {
         throw new Error('Canvas ID is not defined.')
       }
     },
 
     // Remove all the shapes from the specified canvas
-    clearShapes: (i) => {
-      canvases[i].shapes = []
+    clearShapes: (canvas, animation) => {
+      canvases[canvas].animations[animation].shapes = []
     },
 
     // Remove all the images from the specified canvas
-    clearImages: (i) => {
-      canvases[i].images = []
+    clearImages: (canvas, animation) => {
+      canvases[canvas].animations[animation].images = []
     },
 
-    // Remove all the shapes AND images from the specified canvas
-    clearCanvas: (i) => {
-      canvases[i].shapes = []
-      canvases[i].images = []
+    // Remove all the shapes, images and animations from the specified canvas
+    clearCanvas: (canvas) => {
+      canvases[canvas].animations = []
+    },
+
+    // Remove all shapes AND images from an animation
+    clearAnimation: (canvas, animation) => {
+      canvases[canvas].animations[animation].shapes = []
+      canvases[canvas].animations[animation].images = []
     },
 
     // Run one or all of the canvases
-    run: (i) => {
-      window.cancelAnimationFrame(nextFrame)
+    run: (canvas, animation) => {
+      if (typeof canvas !== 'undefined') {
+        window.cancelAnimationFrame(nextFrame)
 
-      if (typeof i === 'number') {
-        canvases[i].play = true
-      } else {
-        for (let i = 0; i < canvases.length; i++) {
-          canvases[i].play = true
+        if (typeof animation === 'number') {
+          canvases[canvas].animations[animation].play = true
+        } else {
+          for (let i = 0; i < canvases[canvas].animations.length; i++) {
+            canvases[canvas].animations[i].play = true
+          }
         }
-      }
 
-      nextFrame = window.requestAnimationFrame(_draw)
+        nextFrame = window.requestAnimationFrame(_draw)
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
     },
 
     // Stop one or all of the canvases
-    stop: (i) => {
-      if (typeof i === 'number') {
-        canvases[i].play = false
-      } else {
-        for (let i = 0; i < canvases.length; i++) {
-          canvases[i].play = false
-        }
+    stop: (canvas, animation) => {
+      if (typeof canvas !== 'undefined') {
+        if (typeof animation === 'number') {
+          canvases[canvas].animations[animation].play = false
+        } else {
+          for (let i = 0; i < canvases.length; i++) {
+            canvases[canvas].animations[i].play = false
+          }
 
-        window.cancelAnimationFrame(nextFrame)
+          window.cancelAnimationFrame(nextFrame)
+        }
+      } else {
+        throw new Error('Canvas ID is not defined.')
       }
     },
 
@@ -262,8 +286,8 @@ const EZCanvas = (() => {
     },
 
     // Get the current progress of an animation
-    getCurrentProgress: (i) => {
-      return canvases[i].progress
+    getCurrentProgress: (canvas, animation) => {
+      return canvases[canvas].animations[animation].progress
     },
 
     // Return the canvases so they can be accessed publically
