@@ -1,3 +1,12 @@
+var path = require('path')
+
+module.exports = [
+  'source-map',
+].map(devtool => ({
+  mode: 'development',
+  devtool
+}))
+
 module: {
   rules: [
     {
