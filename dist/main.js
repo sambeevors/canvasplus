@@ -1,1 +1,2915 @@
-!function(t){var e={};function r(n){if(e[n])return e[n].exports;var a=e[n]={i:n,l:!1,exports:{}};return t[n].call(a.exports,a,a.exports,r),a.l=!0,a.exports}r.m=t,r.c=e,r.d=function(t,e,n){r.o(t,e)||Object.defineProperty(t,e,{configurable:!1,enumerable:!0,get:n})},r.r=function(t){Object.defineProperty(t,"__esModule",{value:!0})},r.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return r.d(e,"a",e),e},r.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},r.p="",r(r.s=3)}([function(t,e,r){var n=r(1),a={};for(var s in n)n.hasOwnProperty(s)&&(a[n[s]]=s);var i=t.exports={rgb:{channels:3,labels:"rgb"},hsl:{channels:3,labels:"hsl"},hsv:{channels:3,labels:"hsv"},hwb:{channels:3,labels:"hwb"},cmyk:{channels:4,labels:"cmyk"},xyz:{channels:3,labels:"xyz"},lab:{channels:3,labels:"lab"},lch:{channels:3,labels:"lch"},hex:{channels:1,labels:["hex"]},keyword:{channels:1,labels:["keyword"]},ansi16:{channels:1,labels:["ansi16"]},ansi256:{channels:1,labels:["ansi256"]},hcg:{channels:3,labels:["h","c","g"]},apple:{channels:3,labels:["r16","g16","b16"]},gray:{channels:1,labels:["gray"]}};for(var o in i)if(i.hasOwnProperty(o)){if(!("channels"in i[o]))throw new Error("missing channels property: "+o);if(!("labels"in i[o]))throw new Error("missing channel labels property: "+o);if(i[o].labels.length!==i[o].channels)throw new Error("channel and label counts mismatch: "+o);var h=i[o].channels,c=i[o].labels;delete i[o].channels,delete i[o].labels,Object.defineProperty(i[o],"channels",{value:h}),Object.defineProperty(i[o],"labels",{value:c})}i.rgb.hsl=function(t){var e,r,n=t[0]/255,a=t[1]/255,s=t[2]/255,i=Math.min(n,a,s),o=Math.max(n,a,s),h=o-i;return o===i?e=0:n===o?e=(a-s)/h:a===o?e=2+(s-n)/h:s===o&&(e=4+(n-a)/h),(e=Math.min(60*e,360))<0&&(e+=360),r=(i+o)/2,[e,100*(o===i?0:r<=.5?h/(o+i):h/(2-o-i)),100*r]},i.rgb.hsv=function(t){var e,r,n=t[0],a=t[1],s=t[2],i=Math.min(n,a,s),o=Math.max(n,a,s),h=o-i;return r=0===o?0:h/o*1e3/10,o===i?e=0:n===o?e=(a-s)/h:a===o?e=2+(s-n)/h:s===o&&(e=4+(n-a)/h),(e=Math.min(60*e,360))<0&&(e+=360),[e,r,o/255*1e3/10]},i.rgb.hwb=function(t){var e=t[0],r=t[1],n=t[2];return[i.rgb.hsl(t)[0],100*(1/255*Math.min(e,Math.min(r,n))),100*(n=1-1/255*Math.max(e,Math.max(r,n)))]},i.rgb.cmyk=function(t){var e,r=t[0]/255,n=t[1]/255,a=t[2]/255;return[100*((1-r-(e=Math.min(1-r,1-n,1-a)))/(1-e)||0),100*((1-n-e)/(1-e)||0),100*((1-a-e)/(1-e)||0),100*e]},i.rgb.keyword=function(t){var e=a[t];if(e)return e;var r,s,i,o=1/0;for(var h in n)if(n.hasOwnProperty(h)){var c=n[h],l=(s=t,i=c,Math.pow(s[0]-i[0],2)+Math.pow(s[1]-i[1],2)+Math.pow(s[2]-i[2],2));l<o&&(o=l,r=h)}return r},i.keyword.rgb=function(t){return n[t]},i.rgb.xyz=function(t){var e=t[0]/255,r=t[1]/255,n=t[2]/255;return[100*(.4124*(e=e>.04045?Math.pow((e+.055)/1.055,2.4):e/12.92)+.3576*(r=r>.04045?Math.pow((r+.055)/1.055,2.4):r/12.92)+.1805*(n=n>.04045?Math.pow((n+.055)/1.055,2.4):n/12.92)),100*(.2126*e+.7152*r+.0722*n),100*(.0193*e+.1192*r+.9505*n)]},i.rgb.lab=function(t){var e=i.rgb.xyz(t),r=e[0],n=e[1],a=e[2];return n/=100,a/=108.883,r=(r/=95.047)>.008856?Math.pow(r,1/3):7.787*r+16/116,[116*(n=n>.008856?Math.pow(n,1/3):7.787*n+16/116)-16,500*(r-n),200*(n-(a=a>.008856?Math.pow(a,1/3):7.787*a+16/116))]},i.hsl.rgb=function(t){var e,r,n,a,s,i=t[0]/360,o=t[1]/100,h=t[2]/100;if(0===o)return[s=255*h,s,s];e=2*h-(r=h<.5?h*(1+o):h+o-h*o),a=[0,0,0];for(var c=0;c<3;c++)(n=i+1/3*-(c-1))<0&&n++,n>1&&n--,s=6*n<1?e+6*(r-e)*n:2*n<1?r:3*n<2?e+(r-e)*(2/3-n)*6:e,a[c]=255*s;return a},i.hsl.hsv=function(t){var e=t[0],r=t[1]/100,n=t[2]/100,a=r,s=Math.max(n,.01);return r*=(n*=2)<=1?n:2-n,a*=s<=1?s:2-s,[e,100*(0===n?2*a/(s+a):2*r/(n+r)),100*((n+r)/2)]},i.hsv.rgb=function(t){var e=t[0]/60,r=t[1]/100,n=t[2]/100,a=Math.floor(e)%6,s=e-Math.floor(e),i=255*n*(1-r),o=255*n*(1-r*s),h=255*n*(1-r*(1-s));switch(n*=255,a){case 0:return[n,h,i];case 1:return[o,n,i];case 2:return[i,n,h];case 3:return[i,o,n];case 4:return[h,i,n];case 5:return[n,i,o]}},i.hsv.hsl=function(t){var e,r,n,a=t[0],s=t[1]/100,i=t[2]/100,o=Math.max(i,.01);return n=(2-s)*i,r=s*o,[a,100*(r=(r/=(e=(2-s)*o)<=1?e:2-e)||0),100*(n/=2)]},i.hwb.rgb=function(t){var e,r,n,a,s,i,o,h=t[0]/360,c=t[1]/100,l=t[2]/100,u=c+l;switch(u>1&&(c/=u,l/=u),r=1-l,n=6*h-(e=Math.floor(6*h)),0!=(1&e)&&(n=1-n),a=c+n*(r-c),e){default:case 6:case 0:s=r,i=a,o=c;break;case 1:s=a,i=r,o=c;break;case 2:s=c,i=r,o=a;break;case 3:s=c,i=a,o=r;break;case 4:s=a,i=c,o=r;break;case 5:s=r,i=c,o=a}return[255*s,255*i,255*o]},i.cmyk.rgb=function(t){var e=t[0]/100,r=t[1]/100,n=t[2]/100,a=t[3]/100;return[255*(1-Math.min(1,e*(1-a)+a)),255*(1-Math.min(1,r*(1-a)+a)),255*(1-Math.min(1,n*(1-a)+a))]},i.xyz.rgb=function(t){var e,r,n,a=t[0]/100,s=t[1]/100,i=t[2]/100;return r=-.9689*a+1.8758*s+.0415*i,n=.0557*a+-.204*s+1.057*i,e=(e=3.2406*a+-1.5372*s+-.4986*i)>.0031308?1.055*Math.pow(e,1/2.4)-.055:12.92*e,r=r>.0031308?1.055*Math.pow(r,1/2.4)-.055:12.92*r,n=n>.0031308?1.055*Math.pow(n,1/2.4)-.055:12.92*n,[255*(e=Math.min(Math.max(0,e),1)),255*(r=Math.min(Math.max(0,r),1)),255*(n=Math.min(Math.max(0,n),1))]},i.xyz.lab=function(t){var e=t[0],r=t[1],n=t[2];return r/=100,n/=108.883,e=(e/=95.047)>.008856?Math.pow(e,1/3):7.787*e+16/116,[116*(r=r>.008856?Math.pow(r,1/3):7.787*r+16/116)-16,500*(e-r),200*(r-(n=n>.008856?Math.pow(n,1/3):7.787*n+16/116))]},i.lab.xyz=function(t){var e,r,n,a=t[0],s=t[1],i=t[2];e=s/500+(r=(a+16)/116),n=r-i/200;var o=Math.pow(r,3),h=Math.pow(e,3),c=Math.pow(n,3);return r=o>.008856?o:(r-16/116)/7.787,e=h>.008856?h:(e-16/116)/7.787,n=c>.008856?c:(n-16/116)/7.787,[e*=95.047,r*=100,n*=108.883]},i.lab.lch=function(t){var e,r=t[0],n=t[1],a=t[2];return(e=360*Math.atan2(a,n)/2/Math.PI)<0&&(e+=360),[r,Math.sqrt(n*n+a*a),e]},i.lch.lab=function(t){var e,r=t[0],n=t[1];return e=t[2]/360*2*Math.PI,[r,n*Math.cos(e),n*Math.sin(e)]},i.rgb.ansi16=function(t){var e=t[0],r=t[1],n=t[2],a=1 in arguments?arguments[1]:i.rgb.hsv(t)[2];if(0===(a=Math.round(a/50)))return 30;var s=30+(Math.round(n/255)<<2|Math.round(r/255)<<1|Math.round(e/255));return 2===a&&(s+=60),s},i.hsv.ansi16=function(t){return i.rgb.ansi16(i.hsv.rgb(t),t[2])},i.rgb.ansi256=function(t){var e=t[0],r=t[1],n=t[2];return e===r&&r===n?e<8?16:e>248?231:Math.round((e-8)/247*24)+232:16+36*Math.round(e/255*5)+6*Math.round(r/255*5)+Math.round(n/255*5)},i.ansi16.rgb=function(t){var e=t%10;if(0===e||7===e)return t>50&&(e+=3.5),[e=e/10.5*255,e,e];var r=.5*(1+~~(t>50));return[(1&e)*r*255,(e>>1&1)*r*255,(e>>2&1)*r*255]},i.ansi256.rgb=function(t){if(t>=232){var e=10*(t-232)+8;return[e,e,e]}var r;return t-=16,[Math.floor(t/36)/5*255,Math.floor((r=t%36)/6)/5*255,r%6/5*255]},i.rgb.hex=function(t){var e=(((255&Math.round(t[0]))<<16)+((255&Math.round(t[1]))<<8)+(255&Math.round(t[2]))).toString(16).toUpperCase();return"000000".substring(e.length)+e},i.hex.rgb=function(t){var e=t.toString(16).match(/[a-f0-9]{6}|[a-f0-9]{3}/i);if(!e)return[0,0,0];var r=e[0];3===e[0].length&&(r=r.split("").map(function(t){return t+t}).join(""));var n=parseInt(r,16);return[n>>16&255,n>>8&255,255&n]},i.rgb.hcg=function(t){var e,r,n=t[0]/255,a=t[1]/255,s=t[2]/255,i=Math.max(Math.max(n,a),s),o=Math.min(Math.min(n,a),s),h=i-o;return e=h<1?o/(1-h):0,r=h<=0?0:i===n?(a-s)/h%6:i===a?2+(s-n)/h:4+(n-a)/h+4,r/=6,[360*(r%=1),100*h,100*e]},i.hsl.hcg=function(t){var e=t[1]/100,r=t[2]/100,n=1,a=0;return(n=r<.5?2*e*r:2*e*(1-r))<1&&(a=(r-.5*n)/(1-n)),[t[0],100*n,100*a]},i.hsv.hcg=function(t){var e=t[1]/100,r=t[2]/100,n=e*r,a=0;return n<1&&(a=(r-n)/(1-n)),[t[0],100*n,100*a]},i.hcg.rgb=function(t){var e=t[0]/360,r=t[1]/100,n=t[2]/100;if(0===r)return[255*n,255*n,255*n];var a,s=[0,0,0],i=e%1*6,o=i%1,h=1-o;switch(Math.floor(i)){case 0:s[0]=1,s[1]=o,s[2]=0;break;case 1:s[0]=h,s[1]=1,s[2]=0;break;case 2:s[0]=0,s[1]=1,s[2]=o;break;case 3:s[0]=0,s[1]=h,s[2]=1;break;case 4:s[0]=o,s[1]=0,s[2]=1;break;default:s[0]=1,s[1]=0,s[2]=h}return a=(1-r)*n,[255*(r*s[0]+a),255*(r*s[1]+a),255*(r*s[2]+a)]},i.hcg.hsv=function(t){var e=t[1]/100,r=e+t[2]/100*(1-e),n=0;return r>0&&(n=e/r),[t[0],100*n,100*r]},i.hcg.hsl=function(t){var e=t[1]/100,r=t[2]/100*(1-e)+.5*e,n=0;return r>0&&r<.5?n=e/(2*r):r>=.5&&r<1&&(n=e/(2*(1-r))),[t[0],100*n,100*r]},i.hcg.hwb=function(t){var e=t[1]/100,r=e+t[2]/100*(1-e);return[t[0],100*(r-e),100*(1-r)]},i.hwb.hcg=function(t){var e=t[1]/100,r=1-t[2]/100,n=r-e,a=0;return n<1&&(a=(r-n)/(1-n)),[t[0],100*n,100*a]},i.apple.rgb=function(t){return[t[0]/65535*255,t[1]/65535*255,t[2]/65535*255]},i.rgb.apple=function(t){return[t[0]/255*65535,t[1]/255*65535,t[2]/255*65535]},i.gray.rgb=function(t){return[t[0]/100*255,t[0]/100*255,t[0]/100*255]},i.gray.hsl=i.gray.hsv=function(t){return[0,0,t[0]]},i.gray.hwb=function(t){return[0,100,t[0]]},i.gray.cmyk=function(t){return[0,0,0,t[0]]},i.gray.lab=function(t){return[t[0],0,0]},i.gray.hex=function(t){var e=255&Math.round(t[0]/100*255),r=((e<<16)+(e<<8)+e).toString(16).toUpperCase();return"000000".substring(r.length)+r},i.rgb.gray=function(t){return[(t[0]+t[1]+t[2])/3/255*100]}},function(t,e,r){"use strict";t.exports={aliceblue:[240,248,255],antiquewhite:[250,235,215],aqua:[0,255,255],aquamarine:[127,255,212],azure:[240,255,255],beige:[245,245,220],bisque:[255,228,196],black:[0,0,0],blanchedalmond:[255,235,205],blue:[0,0,255],blueviolet:[138,43,226],brown:[165,42,42],burlywood:[222,184,135],cadetblue:[95,158,160],chartreuse:[127,255,0],chocolate:[210,105,30],coral:[255,127,80],cornflowerblue:[100,149,237],cornsilk:[255,248,220],crimson:[220,20,60],cyan:[0,255,255],darkblue:[0,0,139],darkcyan:[0,139,139],darkgoldenrod:[184,134,11],darkgray:[169,169,169],darkgreen:[0,100,0],darkgrey:[169,169,169],darkkhaki:[189,183,107],darkmagenta:[139,0,139],darkolivegreen:[85,107,47],darkorange:[255,140,0],darkorchid:[153,50,204],darkred:[139,0,0],darksalmon:[233,150,122],darkseagreen:[143,188,143],darkslateblue:[72,61,139],darkslategray:[47,79,79],darkslategrey:[47,79,79],darkturquoise:[0,206,209],darkviolet:[148,0,211],deeppink:[255,20,147],deepskyblue:[0,191,255],dimgray:[105,105,105],dimgrey:[105,105,105],dodgerblue:[30,144,255],firebrick:[178,34,34],floralwhite:[255,250,240],forestgreen:[34,139,34],fuchsia:[255,0,255],gainsboro:[220,220,220],ghostwhite:[248,248,255],gold:[255,215,0],goldenrod:[218,165,32],gray:[128,128,128],green:[0,128,0],greenyellow:[173,255,47],grey:[128,128,128],honeydew:[240,255,240],hotpink:[255,105,180],indianred:[205,92,92],indigo:[75,0,130],ivory:[255,255,240],khaki:[240,230,140],lavender:[230,230,250],lavenderblush:[255,240,245],lawngreen:[124,252,0],lemonchiffon:[255,250,205],lightblue:[173,216,230],lightcoral:[240,128,128],lightcyan:[224,255,255],lightgoldenrodyellow:[250,250,210],lightgray:[211,211,211],lightgreen:[144,238,144],lightgrey:[211,211,211],lightpink:[255,182,193],lightsalmon:[255,160,122],lightseagreen:[32,178,170],lightskyblue:[135,206,250],lightslategray:[119,136,153],lightslategrey:[119,136,153],lightsteelblue:[176,196,222],lightyellow:[255,255,224],lime:[0,255,0],limegreen:[50,205,50],linen:[250,240,230],magenta:[255,0,255],maroon:[128,0,0],mediumaquamarine:[102,205,170],mediumblue:[0,0,205],mediumorchid:[186,85,211],mediumpurple:[147,112,219],mediumseagreen:[60,179,113],mediumslateblue:[123,104,238],mediumspringgreen:[0,250,154],mediumturquoise:[72,209,204],mediumvioletred:[199,21,133],midnightblue:[25,25,112],mintcream:[245,255,250],mistyrose:[255,228,225],moccasin:[255,228,181],navajowhite:[255,222,173],navy:[0,0,128],oldlace:[253,245,230],olive:[128,128,0],olivedrab:[107,142,35],orange:[255,165,0],orangered:[255,69,0],orchid:[218,112,214],palegoldenrod:[238,232,170],palegreen:[152,251,152],paleturquoise:[175,238,238],palevioletred:[219,112,147],papayawhip:[255,239,213],peachpuff:[255,218,185],peru:[205,133,63],pink:[255,192,203],plum:[221,160,221],powderblue:[176,224,230],purple:[128,0,128],rebeccapurple:[102,51,153],red:[255,0,0],rosybrown:[188,143,143],royalblue:[65,105,225],saddlebrown:[139,69,19],salmon:[250,128,114],sandybrown:[244,164,96],seagreen:[46,139,87],seashell:[255,245,238],sienna:[160,82,45],silver:[192,192,192],skyblue:[135,206,235],slateblue:[106,90,205],slategray:[112,128,144],slategrey:[112,128,144],snow:[255,250,250],springgreen:[0,255,127],steelblue:[70,130,180],tan:[210,180,140],teal:[0,128,128],thistle:[216,191,216],tomato:[255,99,71],turquoise:[64,224,208],violet:[238,130,238],wheat:[245,222,179],white:[255,255,255],whitesmoke:[245,245,245],yellow:[255,255,0],yellowgreen:[154,205,50]}},function(t,e,r){"use strict";var n=r(8),a=r(5),s=[].slice,i=["keyword","gray","hex"],o={};Object.keys(a).forEach(function(t){o[s.call(a[t].labels).sort().join("")]=t});var h={};function c(t,e){if(!(this instanceof c))return new c(t,e);if(e&&e in i&&(e=null),e&&!(e in a))throw new Error("Unknown model: "+e);var r,l;if(t)if(t instanceof c)this.model=t.model,this.color=t.color.slice(),this.valpha=t.valpha;else if("string"==typeof t){var u=n.get(t);if(null===u)throw new Error("Unable to parse color from string: "+t);this.model=u.model,l=a[this.model].channels,this.color=u.value.slice(0,l),this.valpha="number"==typeof u.value[l]?u.value[l]:1}else if(t.length){this.model=e||"rgb",l=a[this.model].channels;var f=s.call(t,0,l);this.color=p(f,l),this.valpha="number"==typeof t[l]?t[l]:1}else if("number"==typeof t)t&=16777215,this.model="rgb",this.color=[t>>16&255,t>>8&255,255&t],this.valpha=1;else{this.valpha=1;var d=Object.keys(t);"alpha"in t&&(d.splice(d.indexOf("alpha"),1),this.valpha="number"==typeof t.alpha?t.alpha:0);var g=d.sort().join("");if(!(g in o))throw new Error("Unable to parse color from object: "+JSON.stringify(t));this.model=o[g];var v=a[this.model].labels,b=[];for(r=0;r<v.length;r++)b.push(t[v[r]]);this.color=p(b)}else this.model="rgb",this.color=[0,0,0],this.valpha=1;if(h[this.model])for(l=a[this.model].channels,r=0;r<l;r++){var y=h[this.model][r];y&&(this.color[r]=y(this.color[r]))}this.valpha=Math.max(0,Math.min(1,this.valpha)),Object.freeze&&Object.freeze(this)}function l(t,e,r){return(t=Array.isArray(t)?t:[t]).forEach(function(t){(h[t]||(h[t]=[]))[e]=r}),t=t[0],function(n){var a;return arguments.length?(r&&(n=r(n)),(a=this[t]()).color[e]=n,a):(a=this[t]().color[e],r&&(a=r(a)),a)}}function u(t){return function(e){return Math.max(0,Math.min(t,e))}}function p(t,e){for(var r=0;r<e;r++)"number"!=typeof t[r]&&(t[r]=0);return t}c.prototype={toString:function(){return this.string()},toJSON:function(){return this[this.model]()},string:function(t){var e=this.model in n.to?this:this.rgb(),r=1===(e=e.round("number"==typeof t?t:1)).valpha?e.color:e.color.concat(this.valpha);return n.to[e.model](r)},percentString:function(t){var e=this.rgb().round("number"==typeof t?t:1),r=1===e.valpha?e.color:e.color.concat(this.valpha);return n.to.rgb.percent(r)},array:function(){return 1===this.valpha?this.color.slice():this.color.concat(this.valpha)},object:function(){for(var t={},e=a[this.model].channels,r=a[this.model].labels,n=0;n<e;n++)t[r[n]]=this.color[n];return 1!==this.valpha&&(t.alpha=this.valpha),t},unitArray:function(){var t=this.rgb().color;return t[0]/=255,t[1]/=255,t[2]/=255,1!==this.valpha&&t.push(this.valpha),t},unitObject:function(){var t=this.rgb().object();return t.r/=255,t.g/=255,t.b/=255,1!==this.valpha&&(t.alpha=this.valpha),t},round:function(t){return t=Math.max(t||0,0),new c(this.color.map(function(t){return function(e){return function(t,e){return Number(t.toFixed(e))}(e,t)}}(t)).concat(this.valpha),this.model)},alpha:function(t){return arguments.length?new c(this.color.concat(Math.max(0,Math.min(1,t))),this.model):this.valpha},red:l("rgb",0,u(255)),green:l("rgb",1,u(255)),blue:l("rgb",2,u(255)),hue:l(["hsl","hsv","hsl","hwb","hcg"],0,function(t){return(t%360+360)%360}),saturationl:l("hsl",1,u(100)),lightness:l("hsl",2,u(100)),saturationv:l("hsv",1,u(100)),value:l("hsv",2,u(100)),chroma:l("hcg",1,u(100)),gray:l("hcg",2,u(100)),white:l("hwb",1,u(100)),wblack:l("hwb",2,u(100)),cyan:l("cmyk",0,u(100)),magenta:l("cmyk",1,u(100)),yellow:l("cmyk",2,u(100)),black:l("cmyk",3,u(100)),x:l("xyz",0,u(100)),y:l("xyz",1,u(100)),z:l("xyz",2,u(100)),l:l("lab",0,u(100)),a:l("lab",1),b:l("lab",2),keyword:function(t){return arguments.length?new c(t):a[this.model].keyword(this.color)},hex:function(t){return arguments.length?new c(t):n.to.hex(this.rgb().round().color)},rgbNumber:function(){var t=this.rgb().color;return(255&t[0])<<16|(255&t[1])<<8|255&t[2]},luminosity:function(){for(var t=this.rgb().color,e=[],r=0;r<t.length;r++){var n=t[r]/255;e[r]=n<=.03928?n/12.92:Math.pow((n+.055)/1.055,2.4)}return.2126*e[0]+.7152*e[1]+.0722*e[2]},contrast:function(t){var e=this.luminosity(),r=t.luminosity();return e>r?(e+.05)/(r+.05):(r+.05)/(e+.05)},level:function(t){var e=this.contrast(t);return e>=7.1?"AAA":e>=4.5?"AA":""},isDark:function(){var t=this.rgb().color;return(299*t[0]+587*t[1]+114*t[2])/1e3<128},isLight:function(){return!this.isDark()},negate:function(){for(var t=this.rgb(),e=0;e<3;e++)t.color[e]=255-t.color[e];return t},lighten:function(t){var e=this.hsl();return e.color[2]+=e.color[2]*t,e},darken:function(t){var e=this.hsl();return e.color[2]-=e.color[2]*t,e},saturate:function(t){var e=this.hsl();return e.color[1]+=e.color[1]*t,e},desaturate:function(t){var e=this.hsl();return e.color[1]-=e.color[1]*t,e},whiten:function(t){var e=this.hwb();return e.color[1]+=e.color[1]*t,e},blacken:function(t){var e=this.hwb();return e.color[2]+=e.color[2]*t,e},grayscale:function(){var t=this.rgb().color,e=.3*t[0]+.59*t[1]+.11*t[2];return c.rgb(e,e,e)},fade:function(t){return this.alpha(this.valpha-this.valpha*t)},opaquer:function(t){return this.alpha(this.valpha+this.valpha*t)},rotate:function(t){var e=this.hsl(),r=e.color[0];return r=(r=(r+t)%360)<0?360+r:r,e.color[0]=r,e},mix:function(t,e){var r=t.rgb(),n=this.rgb(),a=void 0===e?.5:e,s=2*a-1,i=r.alpha()-n.alpha(),o=((s*i==-1?s:(s+i)/(1+s*i))+1)/2,h=1-o;return c.rgb(o*r.red()+h*n.red(),o*r.green()+h*n.green(),o*r.blue()+h*n.blue(),r.alpha()*a+n.alpha()*(1-a))}},Object.keys(a).forEach(function(t){if(-1===i.indexOf(t)){var e=a[t].channels;c.prototype[t]=function(){if(this.model===t)return new c(this);if(arguments.length)return new c(arguments,t);var r,n="number"==typeof arguments[e]?e:this.valpha;return new c((r=a[this.model][t].raw(this.color),Array.isArray(r)?r:[r]).concat(n),t)},c[t]=function(r){return"number"==typeof r&&(r=p(s.call(arguments),e)),new c(r,t)}}}),t.exports=c},function(t,e,r){"use strict";r.r(e);class n{constructor(t){if(this.type,this.canvases=t.canvases,this.GCO="string"==typeof t.GCO?t.GCO:"source-over",this.canvas="number"==typeof t.canvas?t.canvas:0,("object"!=typeof t.position.start||"object"!=typeof t.position.end)&&void 0!==t.position.end)throw new Error("New shapes require a starting position (array: [startX, startY] )");this.pos={start:t.position.start,end:"object"==typeof t.position.end?t.position.end:t.position.start},this.fill="string"==typeof t.fill?t.fill:"#000000",this.rot={start:0,end:0},"object"==typeof t.rotation&&("number"==typeof t.rotation.start&&"number"==typeof t.rotation.end||void 0===t.rotation.end)&&(this.rot={start:t.rotation.start,end:"number"==typeof t.rotation.end?t.rotation.end:t.rotation.start}),this.scale={start:1,end:1},"object"==typeof t.scale&&("number"==typeof t.scale.start&&"number"==typeof t.scale.end||void 0===t.scale.end)&&(this.scale={start:t.scale.start,end:"number"==typeof t.scale.end?t.scale.end:t.scale.start}),this.opacity={start:1,end:1},"object"==typeof t.opacity&&("number"==typeof t.opacity.start&&"number"==typeof t.opacity.end||void 0===t.opacity.end)&&(this.opacity={start:t.opacity.start,end:"number"==typeof t.opacity.end?t.opacity.end:t.opacity.start})}currentPosition(t){return[this.pos.start[0]+(this.pos.end[0]-this.pos.start[0])*this.canvases[this.canvas].easing(t),this.pos.start[1]+(this.pos.end[1]-this.pos.start[1])*this.canvases[this.canvas].easing(t)]}currentRotation(t){return this.rot.start+(this.rot.end-this.rot.start)*this.canvases[this.canvas].easing(t)}currentOpacity(t){return this.opacity.start+(this.opacity.end-this.opacity.start)*this.canvases[this.canvas].easing(t)}}class a extends n{constructor(t){super(t),this.w="number"==typeof t.w?t.w:75,this.h="number"==typeof t.h?t.h:75}currentScale(t){let e=this.w*this.scale.start,r=this.h*this.scale.start;return this.scale.start!==this.scale.end&&(e=this.w+this.w*((this.scale.start+(this.scale.end-this.scale.start))*this.canvases[this.canvas].easing(t)-this.canvases[this.canvas].easing(t)),r=this.h+this.h*((this.scale.start+(this.scale.end-this.scale.start))*this.canvases[this.canvas].easing(t)-this.canvases[this.canvas].easing(t))),[e,r]}draw(t,e){this.canvases[this.canvas].ctx.rect(t[0],t[1],e[0],e[1])}}class s{constructor(t){if(this.GCO="string"==typeof t.GCO?t.GCO:"source-over",this.image=new window.Image,this.w="number"==typeof t.w?t.w:this.image.width,this.h="number"==typeof t.h?t.h:this.image.height,this.loaded=!1,this.image.onLoad=(()=>{this.loaded=!0}),this.image.src="string"==typeof t.src?t.src:"http://placehold.it/500x500?text=Image+Must+Be+A+String",this.canvases=t.canvases,this.canvas="number"==typeof t.canvas?t.canvas:0,("object"!=typeof t.position.start||"object"!=typeof t.position.end)&&void 0!==t.position.end)throw new Error("New shapes require a starting position (array: [startX, startY] )");this.pos={start:t.position.start,end:"object"==typeof t.position.end?t.position.end:t.position.start},this.fill="string"==typeof t.fill?t.fill:"#000000",this.rot={start:0,end:0},"object"==typeof t.rotation&&("number"==typeof t.rotation.start&&"number"==typeof t.rotation.end||void 0===t.rotation.end)&&(this.rot={start:t.rotation.start,end:"number"==typeof t.rotation.end?t.rotation.end:t.rotation.start}),this.scale={start:1,end:1},"object"==typeof t.scale&&("number"==typeof t.scale.start&&"number"==typeof t.scale.end||void 0===t.scale.end)&&(this.scale={start:t.scale.start,end:"number"==typeof t.scale.end?t.scale.end:t.scale.start}),this.opacity={start:1,end:1},"object"==typeof t.opacity&&("number"==typeof t.opacity.start&&"number"==typeof t.opacity.end||void 0===t.opacity.end)&&(this.opacity={start:t.opacity.start,end:"number"==typeof t.opacity.end?t.opacity.end:t.opacity.start})}currentPosition(t){return[this.pos.start[0]+(this.pos.end[0]-this.pos.start[0])*this.canvases[this.canvas].easing(t),this.pos.start[1]+(this.pos.end[1]-this.pos.start[1])*this.canvases[this.canvas].easing(t)]}currentRotation(t){return this.rot.start+(this.rot.end-this.rot.start)*this.canvases[this.canvas].easing(t)}currentScale(t){let e=this.w*this.scale.start,r=this.h*this.scale.start;return this.scale.start!==this.scale.end&&(e=this.w+this.w*((this.scale.start+(this.scale.end-this.scale.start))*this.canvases[this.canvas].easing(t)-this.canvases[this.canvas].easing(t)),r=this.h+this.h*((this.scale.start+(this.scale.end-this.scale.start))*this.canvases[this.canvas].easing(t)-this.canvases[this.canvas].easing(t))),[e,r]}currentOpacity(t){return this.opacity.start+(this.opacity.end-this.opacity.start)*this.canvases[this.canvas].easing(t)}}var i=r(2),o=r.n(i);r.d(e,"default",function(){return c}),r.d(e,"Ease",function(){return h});const h={inQuad:t=>t*t,outQuad:t=>t*(2-t),inOutQuad:t=>t<.5?2*t*t:(4-2*t)*t-1,inCubic:t=>t*t*t,outCubic:t=>--t*t*t+1,inOutCubic:t=>t<.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1,inQuart:t=>t*t*t*t,outQuart:t=>1- --t*t*t*t,inOutQuart:t=>t<.5?8*t*t*t*t:1-8*--t*t*t*t,inQuint:t=>t*t*t*t*t,outQuint:t=>1+--t*t*t*t*t,inOutQuint:t=>t<.5?16*t*t*t*t*t:1+16*--t*t*t*t*t},c=(()=>{let t,e=[];const r=(t,e,r)=>{for(let n=0;n<t.length;n++){r.ctx.globalCompositeOperation=t[n].GCO,r.ctx.beginPath();let i=t[n].currentPosition(e),h=t[n].currentRotation(e),c=t[n].currentScale(e),l=t[n].currentOpacity(e);r.ctx.save(),(t[n]instanceof a||t[n]instanceof s)&&r.ctx.translate(t[n].pos.x+t[n].w/2,t[n].pos.y+t[n].h/2),r.ctx.rotate(h*Math.PI/180),t[n]instanceof s?(r.ctx.globalAlpha=l,r.ctx.drawImage(t[n].image,i[0],i[1],c[0],c[1]),r.ctx.globalAlpha=1):(r.shapes[n].draw(i,c),r.ctx.fillStyle=o()(t[n].fill).alpha(l).rgb(),r.ctx.fill()),r.ctx.restore()}},i=()=>{for(let t=0;t<e.length;t++){let n=e[t];if(n.play){const t=window.performance.now();n.startTime||(n.startTime=t);let e=(t-n.startTime)/n.duration;e>1&&(e=1),n.progress=e,n.ctx.clearRect(0,0,n.ctx.canvas.width,n.ctx.canvas.height),r(n.images,e,n),r(n.shapes,e,n),e>=1&&(n.startTime=null,e=0,n.ctx.globalCompositeOperation="source-over",n.play=n.loop)}}t=window.requestAnimationFrame(i)};return{addCanvas:t=>{e.push(new class{constructor(t={size:[window.innerWidth,window.innerHeight],duration:1e3,easing:t=>t,loop:!1,el:"canvas",resize:!1}){this.duration="number"==typeof t.duration?t.duration:1e3,this.easing="function"==typeof t.easing?t.easing:t=>t,this.loop="boolean"==typeof t.loop&&t.loop,this.c="string"==typeof t.el?document.querySelector(t.el):document.querySelector("canvas"),this.ctx=this.c.getContext("2d"),this.progress=0,this.shapes=[],this.images=[],this.startTime=null,t.resize&&window.addEventListener("resize",()=>{this.setSize(t.size)}),this.setSize(t.size)}setSize(t){this.ctx.canvas.width="object"==typeof t?t[0]*window.devicePixelRatio:window.innerWidth*window.devicePixelRatio,this.ctx.canvas.height="object"==typeof t?t[1]*window.devicePixelRatio:window.innerHeight*window.devicePixelRatio,this.ctx.scale(window.devicePixelRatio,window.devicePixelRatio)}}(t))},addShape:t=>{if(!("number"==typeof t.canvas||e.length<=1))throw new Error("Canvas ID is not defined.");{let r="number"==typeof t.canvas?t.canvas:0;if("string"!=typeof t.shape)throw new Error("Function incorrectly called. Object required with shape property (string).");switch(t.canvases=e,t.shape){case"circ":e[r].shapes.push(new class extends n{constructor(t){super(t),this.r="number"==typeof t.r?t.r:75}currentScale(t){return this.scale.start!==this.scale.end?this.r+this.r*((this.scale.start+(this.scale.end-this.scale.start))*this.canvases[this.canvas].easing(t)-this.canvases[this.canvas].easing(t)):this.r*this.scale.start}draw(t,e){this.canvases[this.canvas].ctx.arc(t[0],t[1],e,0,2*Math.PI)}}(t));break;case"rect":e[r].shapes.push(new a(t));break;default:throw new Error("Provided shape not valid.")}}},addImage:t=>{if(!("number"==typeof t.canvas||e.length<=1))throw new Error("Canvas ID is not defined.");t.canvases=e,e[t.canvas].images.push(new s(t))},clearShapes:t=>{e[t].shapes=[]},clearImages:t=>{e[t].images=[]},clearCanvas:t=>{e[t].shapes=[],e[t].images=[]},run:r=>{if(window.cancelAnimationFrame(t),"number"==typeof r)e[r].play=!0;else for(let t=0;t<e.length;t++)e[t].play=!0;t=window.requestAnimationFrame(i)},stop:r=>{if("number"==typeof r)e[r].play=!1;else{for(let t=0;t<e.length;t++)e[t].play=!1;window.cancelAnimationFrame(t)}},getCanvasSize:t=>{if("undefined"!==e.ctx){if(t)return{width:e[t].ctx.canvas.width,height:e[t].ctx.canvas.height};{let t=[];for(let r=0;r<e.length;r++)t.push({width:e[r].ctx.canvas.width,height:e[r].ctx.canvas.height});return 1===t.length?t[0]:t}}throw new Error("Canvas must be set up before this function is called.")},getCurrentProgress:t=>e[t].progress,canvases:e}})()},function(t,e,r){var n=r(0);function a(t){var e=function(){for(var t={},e=Object.keys(n),r=e.length,a=0;a<r;a++)t[e[a]]={distance:-1,parent:null};return t}(),r=[t];for(e[t].distance=0;r.length;)for(var a=r.pop(),s=Object.keys(n[a]),i=s.length,o=0;o<i;o++){var h=s[o],c=e[h];-1===c.distance&&(c.distance=e[a].distance+1,c.parent=a,r.unshift(h))}return e}function s(t,e){return function(r){return e(t(r))}}function i(t,e){for(var r=[e[t].parent,t],a=n[e[t].parent][t],i=e[t].parent;e[i].parent;)r.unshift(e[i].parent),a=s(n[e[i].parent][i],a),i=e[i].parent;return a.conversion=r,a}t.exports=function(t){for(var e=a(t),r={},n=Object.keys(e),s=n.length,o=0;o<s;o++){var h=n[o];null!==e[h].parent&&(r[h]=i(h,e))}return r}},function(t,e,r){var n=r(0),a=r(4),s={};Object.keys(n).forEach(function(t){s[t]={},Object.defineProperty(s[t],"channels",{value:n[t].channels}),Object.defineProperty(s[t],"labels",{value:n[t].labels});var e=a(t);Object.keys(e).forEach(function(r){var n=e[r];s[t][r]=function(t){var e=function(e){if(void 0===e||null===e)return e;arguments.length>1&&(e=Array.prototype.slice.call(arguments));var r=t(e);if("object"==typeof r)for(var n=r.length,a=0;a<n;a++)r[a]=Math.round(r[a]);return r};return"conversion"in t&&(e.conversion=t.conversion),e}(n),s[t][r].raw=function(t){var e=function(e){return void 0===e||null===e?e:(arguments.length>1&&(e=Array.prototype.slice.call(arguments)),t(e))};return"conversion"in t&&(e.conversion=t.conversion),e}(n)})}),t.exports=s},function(t,e,r){"use strict";t.exports=function(t){return!(!t||"string"==typeof t)&&(t instanceof Array||Array.isArray(t)||t.length>=0&&(t.splice instanceof Function||Object.getOwnPropertyDescriptor(t,t.length-1)&&"String"!==t.constructor.name))}},function(t,e,r){"use strict";var n=r(6),a=Array.prototype.concat,s=Array.prototype.slice,i=t.exports=function(t){for(var e=[],r=0,i=t.length;r<i;r++){var o=t[r];n(o)?e=a.call(e,s.call(o)):e.push(o)}return e};i.wrap=function(t){return function(){return t(i(arguments))}}},function(t,e,r){var n=r(1),a=r(7),s={};for(var i in n)n.hasOwnProperty(i)&&(s[n[i]]=i);var o=t.exports={to:{}};function h(t,e,r){return Math.min(Math.max(e,t),r)}function c(t){var e=t.toString(16).toUpperCase();return e.length<2?"0"+e:e}o.get=function(t){var e,r;switch(t.substring(0,3).toLowerCase()){case"hsl":e=o.get.hsl(t),r="hsl";break;case"hwb":e=o.get.hwb(t),r="hwb";break;default:e=o.get.rgb(t),r="rgb"}return e?{model:r,value:e}:null},o.get.rgb=function(t){if(!t)return null;var e,r,a,s=[0,0,0,1];if(e=t.match(/^#([a-f0-9]{6})([a-f0-9]{2})?$/i)){for(a=e[2],e=e[1],r=0;r<3;r++){var i=2*r;s[r]=parseInt(e.slice(i,i+2),16)}a&&(s[3]=Math.round(parseInt(a,16)/255*100)/100)}else if(e=t.match(/^#([a-f0-9]{3,4})$/i)){for(a=(e=e[1])[3],r=0;r<3;r++)s[r]=parseInt(e[r]+e[r],16);a&&(s[3]=Math.round(parseInt(a+a,16)/255*100)/100)}else if(e=t.match(/^rgba?\(\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/)){for(r=0;r<3;r++)s[r]=parseInt(e[r+1],0);e[4]&&(s[3]=parseFloat(e[4]))}else{if(!(e=t.match(/^rgba?\(\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/)))return(e=t.match(/(\D+)/))?"transparent"===e[1]?[0,0,0,0]:(s=n[e[1]])?(s[3]=1,s):null:null;for(r=0;r<3;r++)s[r]=Math.round(2.55*parseFloat(e[r+1]));e[4]&&(s[3]=parseFloat(e[4]))}for(r=0;r<3;r++)s[r]=h(s[r],0,255);return s[3]=h(s[3],0,1),s},o.get.hsl=function(t){if(!t)return null;var e=t.match(/^hsla?\(\s*([+-]?\d*[\.]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/);if(e){var r=parseFloat(e[4]);return[(parseFloat(e[1])%360+360)%360,h(parseFloat(e[2]),0,100),h(parseFloat(e[3]),0,100),h(isNaN(r)?1:r,0,1)]}return null},o.get.hwb=function(t){if(!t)return null;var e=t.match(/^hwb\(\s*([+-]?\d*[\.]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/);if(e){var r=parseFloat(e[4]);return[(parseFloat(e[1])%360+360)%360,h(parseFloat(e[2]),0,100),h(parseFloat(e[3]),0,100),h(isNaN(r)?1:r,0,1)]}return null},o.to.hex=function(){var t=a(arguments);return"#"+c(t[0])+c(t[1])+c(t[2])+(t[3]<1?c(Math.round(255*t[3])):"")},o.to.rgb=function(){var t=a(arguments);return t.length<4||1===t[3]?"rgb("+Math.round(t[0])+", "+Math.round(t[1])+", "+Math.round(t[2])+")":"rgba("+Math.round(t[0])+", "+Math.round(t[1])+", "+Math.round(t[2])+", "+t[3]+")"},o.to.rgb.percent=function(){var t=a(arguments),e=Math.round(t[0]/255*100),r=Math.round(t[1]/255*100),n=Math.round(t[2]/255*100);return t.length<4||1===t[3]?"rgb("+e+"%, "+r+"%, "+n+"%)":"rgba("+e+"%, "+r+"%, "+n+"%, "+t[3]+")"},o.to.hsl=function(){var t=a(arguments);return t.length<4||1===t[3]?"hsl("+t[0]+", "+t[1]+"%, "+t[2]+"%)":"hsla("+t[0]+", "+t[1]+"%, "+t[2]+"%, "+t[3]+")"},o.to.hwb=function(){var t=a(arguments),e="";return t.length>=4&&1!==t[3]&&(e=", "+t[3]),"hwb("+t[0]+", "+t[1]+"%, "+t[2]+"%"+e+")"},o.to.keyword=function(t){return s[t.slice(0,3)]}}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./node_modules/color-convert/conversions.js":
+/*!***************************************************!*\
+  !*** ./node_modules/color-convert/conversions.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* MIT license */
+var cssKeywords = __webpack_require__(/*! color-name */ "./node_modules/color-name/index.js");
+
+// NOTE: conversions should only return primitive values (i.e. arrays, or
+//       values that give correct `typeof` results).
+//       do not use box values types (i.e. Number(), String(), etc.)
+
+var reverseKeywords = {};
+for (var key in cssKeywords) {
+	if (cssKeywords.hasOwnProperty(key)) {
+		reverseKeywords[cssKeywords[key]] = key;
+	}
+}
+
+var convert = module.exports = {
+	rgb: {channels: 3, labels: 'rgb'},
+	hsl: {channels: 3, labels: 'hsl'},
+	hsv: {channels: 3, labels: 'hsv'},
+	hwb: {channels: 3, labels: 'hwb'},
+	cmyk: {channels: 4, labels: 'cmyk'},
+	xyz: {channels: 3, labels: 'xyz'},
+	lab: {channels: 3, labels: 'lab'},
+	lch: {channels: 3, labels: 'lch'},
+	hex: {channels: 1, labels: ['hex']},
+	keyword: {channels: 1, labels: ['keyword']},
+	ansi16: {channels: 1, labels: ['ansi16']},
+	ansi256: {channels: 1, labels: ['ansi256']},
+	hcg: {channels: 3, labels: ['h', 'c', 'g']},
+	apple: {channels: 3, labels: ['r16', 'g16', 'b16']},
+	gray: {channels: 1, labels: ['gray']}
+};
+
+// hide .channels and .labels properties
+for (var model in convert) {
+	if (convert.hasOwnProperty(model)) {
+		if (!('channels' in convert[model])) {
+			throw new Error('missing channels property: ' + model);
+		}
+
+		if (!('labels' in convert[model])) {
+			throw new Error('missing channel labels property: ' + model);
+		}
+
+		if (convert[model].labels.length !== convert[model].channels) {
+			throw new Error('channel and label counts mismatch: ' + model);
+		}
+
+		var channels = convert[model].channels;
+		var labels = convert[model].labels;
+		delete convert[model].channels;
+		delete convert[model].labels;
+		Object.defineProperty(convert[model], 'channels', {value: channels});
+		Object.defineProperty(convert[model], 'labels', {value: labels});
+	}
+}
+
+convert.rgb.hsl = function (rgb) {
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+	var min = Math.min(r, g, b);
+	var max = Math.max(r, g, b);
+	var delta = max - min;
+	var h;
+	var s;
+	var l;
+
+	if (max === min) {
+		h = 0;
+	} else if (r === max) {
+		h = (g - b) / delta;
+	} else if (g === max) {
+		h = 2 + (b - r) / delta;
+	} else if (b === max) {
+		h = 4 + (r - g) / delta;
+	}
+
+	h = Math.min(h * 60, 360);
+
+	if (h < 0) {
+		h += 360;
+	}
+
+	l = (min + max) / 2;
+
+	if (max === min) {
+		s = 0;
+	} else if (l <= 0.5) {
+		s = delta / (max + min);
+	} else {
+		s = delta / (2 - max - min);
+	}
+
+	return [h, s * 100, l * 100];
+};
+
+convert.rgb.hsv = function (rgb) {
+	var r = rgb[0];
+	var g = rgb[1];
+	var b = rgb[2];
+	var min = Math.min(r, g, b);
+	var max = Math.max(r, g, b);
+	var delta = max - min;
+	var h;
+	var s;
+	var v;
+
+	if (max === 0) {
+		s = 0;
+	} else {
+		s = (delta / max * 1000) / 10;
+	}
+
+	if (max === min) {
+		h = 0;
+	} else if (r === max) {
+		h = (g - b) / delta;
+	} else if (g === max) {
+		h = 2 + (b - r) / delta;
+	} else if (b === max) {
+		h = 4 + (r - g) / delta;
+	}
+
+	h = Math.min(h * 60, 360);
+
+	if (h < 0) {
+		h += 360;
+	}
+
+	v = ((max / 255) * 1000) / 10;
+
+	return [h, s, v];
+};
+
+convert.rgb.hwb = function (rgb) {
+	var r = rgb[0];
+	var g = rgb[1];
+	var b = rgb[2];
+	var h = convert.rgb.hsl(rgb)[0];
+	var w = 1 / 255 * Math.min(r, Math.min(g, b));
+
+	b = 1 - 1 / 255 * Math.max(r, Math.max(g, b));
+
+	return [h, w * 100, b * 100];
+};
+
+convert.rgb.cmyk = function (rgb) {
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+	var c;
+	var m;
+	var y;
+	var k;
+
+	k = Math.min(1 - r, 1 - g, 1 - b);
+	c = (1 - r - k) / (1 - k) || 0;
+	m = (1 - g - k) / (1 - k) || 0;
+	y = (1 - b - k) / (1 - k) || 0;
+
+	return [c * 100, m * 100, y * 100, k * 100];
+};
+
+/**
+ * See https://en.m.wikipedia.org/wiki/Euclidean_distance#Squared_Euclidean_distance
+ * */
+function comparativeDistance(x, y) {
+	return (
+		Math.pow(x[0] - y[0], 2) +
+		Math.pow(x[1] - y[1], 2) +
+		Math.pow(x[2] - y[2], 2)
+	);
+}
+
+convert.rgb.keyword = function (rgb) {
+	var reversed = reverseKeywords[rgb];
+	if (reversed) {
+		return reversed;
+	}
+
+	var currentClosestDistance = Infinity;
+	var currentClosestKeyword;
+
+	for (var keyword in cssKeywords) {
+		if (cssKeywords.hasOwnProperty(keyword)) {
+			var value = cssKeywords[keyword];
+
+			// Compute comparative distance
+			var distance = comparativeDistance(rgb, value);
+
+			// Check if its less, if so set as closest
+			if (distance < currentClosestDistance) {
+				currentClosestDistance = distance;
+				currentClosestKeyword = keyword;
+			}
+		}
+	}
+
+	return currentClosestKeyword;
+};
+
+convert.keyword.rgb = function (keyword) {
+	return cssKeywords[keyword];
+};
+
+convert.rgb.xyz = function (rgb) {
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+
+	// assume sRGB
+	r = r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : (r / 12.92);
+	g = g > 0.04045 ? Math.pow(((g + 0.055) / 1.055), 2.4) : (g / 12.92);
+	b = b > 0.04045 ? Math.pow(((b + 0.055) / 1.055), 2.4) : (b / 12.92);
+
+	var x = (r * 0.4124) + (g * 0.3576) + (b * 0.1805);
+	var y = (r * 0.2126) + (g * 0.7152) + (b * 0.0722);
+	var z = (r * 0.0193) + (g * 0.1192) + (b * 0.9505);
+
+	return [x * 100, y * 100, z * 100];
+};
+
+convert.rgb.lab = function (rgb) {
+	var xyz = convert.rgb.xyz(rgb);
+	var x = xyz[0];
+	var y = xyz[1];
+	var z = xyz[2];
+	var l;
+	var a;
+	var b;
+
+	x /= 95.047;
+	y /= 100;
+	z /= 108.883;
+
+	x = x > 0.008856 ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
+	y = y > 0.008856 ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
+	z = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
+
+	l = (116 * y) - 16;
+	a = 500 * (x - y);
+	b = 200 * (y - z);
+
+	return [l, a, b];
+};
+
+convert.hsl.rgb = function (hsl) {
+	var h = hsl[0] / 360;
+	var s = hsl[1] / 100;
+	var l = hsl[2] / 100;
+	var t1;
+	var t2;
+	var t3;
+	var rgb;
+	var val;
+
+	if (s === 0) {
+		val = l * 255;
+		return [val, val, val];
+	}
+
+	if (l < 0.5) {
+		t2 = l * (1 + s);
+	} else {
+		t2 = l + s - l * s;
+	}
+
+	t1 = 2 * l - t2;
+
+	rgb = [0, 0, 0];
+	for (var i = 0; i < 3; i++) {
+		t3 = h + 1 / 3 * -(i - 1);
+		if (t3 < 0) {
+			t3++;
+		}
+		if (t3 > 1) {
+			t3--;
+		}
+
+		if (6 * t3 < 1) {
+			val = t1 + (t2 - t1) * 6 * t3;
+		} else if (2 * t3 < 1) {
+			val = t2;
+		} else if (3 * t3 < 2) {
+			val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
+		} else {
+			val = t1;
+		}
+
+		rgb[i] = val * 255;
+	}
+
+	return rgb;
+};
+
+convert.hsl.hsv = function (hsl) {
+	var h = hsl[0];
+	var s = hsl[1] / 100;
+	var l = hsl[2] / 100;
+	var smin = s;
+	var lmin = Math.max(l, 0.01);
+	var sv;
+	var v;
+
+	l *= 2;
+	s *= (l <= 1) ? l : 2 - l;
+	smin *= lmin <= 1 ? lmin : 2 - lmin;
+	v = (l + s) / 2;
+	sv = l === 0 ? (2 * smin) / (lmin + smin) : (2 * s) / (l + s);
+
+	return [h, sv * 100, v * 100];
+};
+
+convert.hsv.rgb = function (hsv) {
+	var h = hsv[0] / 60;
+	var s = hsv[1] / 100;
+	var v = hsv[2] / 100;
+	var hi = Math.floor(h) % 6;
+
+	var f = h - Math.floor(h);
+	var p = 255 * v * (1 - s);
+	var q = 255 * v * (1 - (s * f));
+	var t = 255 * v * (1 - (s * (1 - f)));
+	v *= 255;
+
+	switch (hi) {
+		case 0:
+			return [v, t, p];
+		case 1:
+			return [q, v, p];
+		case 2:
+			return [p, v, t];
+		case 3:
+			return [p, q, v];
+		case 4:
+			return [t, p, v];
+		case 5:
+			return [v, p, q];
+	}
+};
+
+convert.hsv.hsl = function (hsv) {
+	var h = hsv[0];
+	var s = hsv[1] / 100;
+	var v = hsv[2] / 100;
+	var vmin = Math.max(v, 0.01);
+	var lmin;
+	var sl;
+	var l;
+
+	l = (2 - s) * v;
+	lmin = (2 - s) * vmin;
+	sl = s * vmin;
+	sl /= (lmin <= 1) ? lmin : 2 - lmin;
+	sl = sl || 0;
+	l /= 2;
+
+	return [h, sl * 100, l * 100];
+};
+
+// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
+convert.hwb.rgb = function (hwb) {
+	var h = hwb[0] / 360;
+	var wh = hwb[1] / 100;
+	var bl = hwb[2] / 100;
+	var ratio = wh + bl;
+	var i;
+	var v;
+	var f;
+	var n;
+
+	// wh + bl cant be > 1
+	if (ratio > 1) {
+		wh /= ratio;
+		bl /= ratio;
+	}
+
+	i = Math.floor(6 * h);
+	v = 1 - bl;
+	f = 6 * h - i;
+
+	if ((i & 0x01) !== 0) {
+		f = 1 - f;
+	}
+
+	n = wh + f * (v - wh); // linear interpolation
+
+	var r;
+	var g;
+	var b;
+	switch (i) {
+		default:
+		case 6:
+		case 0: r = v; g = n; b = wh; break;
+		case 1: r = n; g = v; b = wh; break;
+		case 2: r = wh; g = v; b = n; break;
+		case 3: r = wh; g = n; b = v; break;
+		case 4: r = n; g = wh; b = v; break;
+		case 5: r = v; g = wh; b = n; break;
+	}
+
+	return [r * 255, g * 255, b * 255];
+};
+
+convert.cmyk.rgb = function (cmyk) {
+	var c = cmyk[0] / 100;
+	var m = cmyk[1] / 100;
+	var y = cmyk[2] / 100;
+	var k = cmyk[3] / 100;
+	var r;
+	var g;
+	var b;
+
+	r = 1 - Math.min(1, c * (1 - k) + k);
+	g = 1 - Math.min(1, m * (1 - k) + k);
+	b = 1 - Math.min(1, y * (1 - k) + k);
+
+	return [r * 255, g * 255, b * 255];
+};
+
+convert.xyz.rgb = function (xyz) {
+	var x = xyz[0] / 100;
+	var y = xyz[1] / 100;
+	var z = xyz[2] / 100;
+	var r;
+	var g;
+	var b;
+
+	r = (x * 3.2406) + (y * -1.5372) + (z * -0.4986);
+	g = (x * -0.9689) + (y * 1.8758) + (z * 0.0415);
+	b = (x * 0.0557) + (y * -0.2040) + (z * 1.0570);
+
+	// assume sRGB
+	r = r > 0.0031308
+		? ((1.055 * Math.pow(r, 1.0 / 2.4)) - 0.055)
+		: r * 12.92;
+
+	g = g > 0.0031308
+		? ((1.055 * Math.pow(g, 1.0 / 2.4)) - 0.055)
+		: g * 12.92;
+
+	b = b > 0.0031308
+		? ((1.055 * Math.pow(b, 1.0 / 2.4)) - 0.055)
+		: b * 12.92;
+
+	r = Math.min(Math.max(0, r), 1);
+	g = Math.min(Math.max(0, g), 1);
+	b = Math.min(Math.max(0, b), 1);
+
+	return [r * 255, g * 255, b * 255];
+};
+
+convert.xyz.lab = function (xyz) {
+	var x = xyz[0];
+	var y = xyz[1];
+	var z = xyz[2];
+	var l;
+	var a;
+	var b;
+
+	x /= 95.047;
+	y /= 100;
+	z /= 108.883;
+
+	x = x > 0.008856 ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
+	y = y > 0.008856 ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
+	z = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
+
+	l = (116 * y) - 16;
+	a = 500 * (x - y);
+	b = 200 * (y - z);
+
+	return [l, a, b];
+};
+
+convert.lab.xyz = function (lab) {
+	var l = lab[0];
+	var a = lab[1];
+	var b = lab[2];
+	var x;
+	var y;
+	var z;
+
+	y = (l + 16) / 116;
+	x = a / 500 + y;
+	z = y - b / 200;
+
+	var y2 = Math.pow(y, 3);
+	var x2 = Math.pow(x, 3);
+	var z2 = Math.pow(z, 3);
+	y = y2 > 0.008856 ? y2 : (y - 16 / 116) / 7.787;
+	x = x2 > 0.008856 ? x2 : (x - 16 / 116) / 7.787;
+	z = z2 > 0.008856 ? z2 : (z - 16 / 116) / 7.787;
+
+	x *= 95.047;
+	y *= 100;
+	z *= 108.883;
+
+	return [x, y, z];
+};
+
+convert.lab.lch = function (lab) {
+	var l = lab[0];
+	var a = lab[1];
+	var b = lab[2];
+	var hr;
+	var h;
+	var c;
+
+	hr = Math.atan2(b, a);
+	h = hr * 360 / 2 / Math.PI;
+
+	if (h < 0) {
+		h += 360;
+	}
+
+	c = Math.sqrt(a * a + b * b);
+
+	return [l, c, h];
+};
+
+convert.lch.lab = function (lch) {
+	var l = lch[0];
+	var c = lch[1];
+	var h = lch[2];
+	var a;
+	var b;
+	var hr;
+
+	hr = h / 360 * 2 * Math.PI;
+	a = c * Math.cos(hr);
+	b = c * Math.sin(hr);
+
+	return [l, a, b];
+};
+
+convert.rgb.ansi16 = function (args) {
+	var r = args[0];
+	var g = args[1];
+	var b = args[2];
+	var value = 1 in arguments ? arguments[1] : convert.rgb.hsv(args)[2]; // hsv -> ansi16 optimization
+
+	value = Math.round(value / 50);
+
+	if (value === 0) {
+		return 30;
+	}
+
+	var ansi = 30
+		+ ((Math.round(b / 255) << 2)
+		| (Math.round(g / 255) << 1)
+		| Math.round(r / 255));
+
+	if (value === 2) {
+		ansi += 60;
+	}
+
+	return ansi;
+};
+
+convert.hsv.ansi16 = function (args) {
+	// optimization here; we already know the value and don't need to get
+	// it converted for us.
+	return convert.rgb.ansi16(convert.hsv.rgb(args), args[2]);
+};
+
+convert.rgb.ansi256 = function (args) {
+	var r = args[0];
+	var g = args[1];
+	var b = args[2];
+
+	// we use the extended greyscale palette here, with the exception of
+	// black and white. normal palette only has 4 greyscale shades.
+	if (r === g && g === b) {
+		if (r < 8) {
+			return 16;
+		}
+
+		if (r > 248) {
+			return 231;
+		}
+
+		return Math.round(((r - 8) / 247) * 24) + 232;
+	}
+
+	var ansi = 16
+		+ (36 * Math.round(r / 255 * 5))
+		+ (6 * Math.round(g / 255 * 5))
+		+ Math.round(b / 255 * 5);
+
+	return ansi;
+};
+
+convert.ansi16.rgb = function (args) {
+	var color = args % 10;
+
+	// handle greyscale
+	if (color === 0 || color === 7) {
+		if (args > 50) {
+			color += 3.5;
+		}
+
+		color = color / 10.5 * 255;
+
+		return [color, color, color];
+	}
+
+	var mult = (~~(args > 50) + 1) * 0.5;
+	var r = ((color & 1) * mult) * 255;
+	var g = (((color >> 1) & 1) * mult) * 255;
+	var b = (((color >> 2) & 1) * mult) * 255;
+
+	return [r, g, b];
+};
+
+convert.ansi256.rgb = function (args) {
+	// handle greyscale
+	if (args >= 232) {
+		var c = (args - 232) * 10 + 8;
+		return [c, c, c];
+	}
+
+	args -= 16;
+
+	var rem;
+	var r = Math.floor(args / 36) / 5 * 255;
+	var g = Math.floor((rem = args % 36) / 6) / 5 * 255;
+	var b = (rem % 6) / 5 * 255;
+
+	return [r, g, b];
+};
+
+convert.rgb.hex = function (args) {
+	var integer = ((Math.round(args[0]) & 0xFF) << 16)
+		+ ((Math.round(args[1]) & 0xFF) << 8)
+		+ (Math.round(args[2]) & 0xFF);
+
+	var string = integer.toString(16).toUpperCase();
+	return '000000'.substring(string.length) + string;
+};
+
+convert.hex.rgb = function (args) {
+	var match = args.toString(16).match(/[a-f0-9]{6}|[a-f0-9]{3}/i);
+	if (!match) {
+		return [0, 0, 0];
+	}
+
+	var colorString = match[0];
+
+	if (match[0].length === 3) {
+		colorString = colorString.split('').map(function (char) {
+			return char + char;
+		}).join('');
+	}
+
+	var integer = parseInt(colorString, 16);
+	var r = (integer >> 16) & 0xFF;
+	var g = (integer >> 8) & 0xFF;
+	var b = integer & 0xFF;
+
+	return [r, g, b];
+};
+
+convert.rgb.hcg = function (rgb) {
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+	var max = Math.max(Math.max(r, g), b);
+	var min = Math.min(Math.min(r, g), b);
+	var chroma = (max - min);
+	var grayscale;
+	var hue;
+
+	if (chroma < 1) {
+		grayscale = min / (1 - chroma);
+	} else {
+		grayscale = 0;
+	}
+
+	if (chroma <= 0) {
+		hue = 0;
+	} else
+	if (max === r) {
+		hue = ((g - b) / chroma) % 6;
+	} else
+	if (max === g) {
+		hue = 2 + (b - r) / chroma;
+	} else {
+		hue = 4 + (r - g) / chroma + 4;
+	}
+
+	hue /= 6;
+	hue %= 1;
+
+	return [hue * 360, chroma * 100, grayscale * 100];
+};
+
+convert.hsl.hcg = function (hsl) {
+	var s = hsl[1] / 100;
+	var l = hsl[2] / 100;
+	var c = 1;
+	var f = 0;
+
+	if (l < 0.5) {
+		c = 2.0 * s * l;
+	} else {
+		c = 2.0 * s * (1.0 - l);
+	}
+
+	if (c < 1.0) {
+		f = (l - 0.5 * c) / (1.0 - c);
+	}
+
+	return [hsl[0], c * 100, f * 100];
+};
+
+convert.hsv.hcg = function (hsv) {
+	var s = hsv[1] / 100;
+	var v = hsv[2] / 100;
+
+	var c = s * v;
+	var f = 0;
+
+	if (c < 1.0) {
+		f = (v - c) / (1 - c);
+	}
+
+	return [hsv[0], c * 100, f * 100];
+};
+
+convert.hcg.rgb = function (hcg) {
+	var h = hcg[0] / 360;
+	var c = hcg[1] / 100;
+	var g = hcg[2] / 100;
+
+	if (c === 0.0) {
+		return [g * 255, g * 255, g * 255];
+	}
+
+	var pure = [0, 0, 0];
+	var hi = (h % 1) * 6;
+	var v = hi % 1;
+	var w = 1 - v;
+	var mg = 0;
+
+	switch (Math.floor(hi)) {
+		case 0:
+			pure[0] = 1; pure[1] = v; pure[2] = 0; break;
+		case 1:
+			pure[0] = w; pure[1] = 1; pure[2] = 0; break;
+		case 2:
+			pure[0] = 0; pure[1] = 1; pure[2] = v; break;
+		case 3:
+			pure[0] = 0; pure[1] = w; pure[2] = 1; break;
+		case 4:
+			pure[0] = v; pure[1] = 0; pure[2] = 1; break;
+		default:
+			pure[0] = 1; pure[1] = 0; pure[2] = w;
+	}
+
+	mg = (1.0 - c) * g;
+
+	return [
+		(c * pure[0] + mg) * 255,
+		(c * pure[1] + mg) * 255,
+		(c * pure[2] + mg) * 255
+	];
+};
+
+convert.hcg.hsv = function (hcg) {
+	var c = hcg[1] / 100;
+	var g = hcg[2] / 100;
+
+	var v = c + g * (1.0 - c);
+	var f = 0;
+
+	if (v > 0.0) {
+		f = c / v;
+	}
+
+	return [hcg[0], f * 100, v * 100];
+};
+
+convert.hcg.hsl = function (hcg) {
+	var c = hcg[1] / 100;
+	var g = hcg[2] / 100;
+
+	var l = g * (1.0 - c) + 0.5 * c;
+	var s = 0;
+
+	if (l > 0.0 && l < 0.5) {
+		s = c / (2 * l);
+	} else
+	if (l >= 0.5 && l < 1.0) {
+		s = c / (2 * (1 - l));
+	}
+
+	return [hcg[0], s * 100, l * 100];
+};
+
+convert.hcg.hwb = function (hcg) {
+	var c = hcg[1] / 100;
+	var g = hcg[2] / 100;
+	var v = c + g * (1.0 - c);
+	return [hcg[0], (v - c) * 100, (1 - v) * 100];
+};
+
+convert.hwb.hcg = function (hwb) {
+	var w = hwb[1] / 100;
+	var b = hwb[2] / 100;
+	var v = 1 - b;
+	var c = v - w;
+	var g = 0;
+
+	if (c < 1) {
+		g = (v - c) / (1 - c);
+	}
+
+	return [hwb[0], c * 100, g * 100];
+};
+
+convert.apple.rgb = function (apple) {
+	return [(apple[0] / 65535) * 255, (apple[1] / 65535) * 255, (apple[2] / 65535) * 255];
+};
+
+convert.rgb.apple = function (rgb) {
+	return [(rgb[0] / 255) * 65535, (rgb[1] / 255) * 65535, (rgb[2] / 255) * 65535];
+};
+
+convert.gray.rgb = function (args) {
+	return [args[0] / 100 * 255, args[0] / 100 * 255, args[0] / 100 * 255];
+};
+
+convert.gray.hsl = convert.gray.hsv = function (args) {
+	return [0, 0, args[0]];
+};
+
+convert.gray.hwb = function (gray) {
+	return [0, 100, gray[0]];
+};
+
+convert.gray.cmyk = function (gray) {
+	return [0, 0, 0, gray[0]];
+};
+
+convert.gray.lab = function (gray) {
+	return [gray[0], 0, 0];
+};
+
+convert.gray.hex = function (gray) {
+	var val = Math.round(gray[0] / 100 * 255) & 0xFF;
+	var integer = (val << 16) + (val << 8) + val;
+
+	var string = integer.toString(16).toUpperCase();
+	return '000000'.substring(string.length) + string;
+};
+
+convert.rgb.gray = function (rgb) {
+	var val = (rgb[0] + rgb[1] + rgb[2]) / 3;
+	return [val / 255 * 100];
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/color-convert/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/color-convert/index.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var conversions = __webpack_require__(/*! ./conversions */ "./node_modules/color-convert/conversions.js");
+var route = __webpack_require__(/*! ./route */ "./node_modules/color-convert/route.js");
+
+var convert = {};
+
+var models = Object.keys(conversions);
+
+function wrapRaw(fn) {
+	var wrappedFn = function (args) {
+		if (args === undefined || args === null) {
+			return args;
+		}
+
+		if (arguments.length > 1) {
+			args = Array.prototype.slice.call(arguments);
+		}
+
+		return fn(args);
+	};
+
+	// preserve .conversion property if there is one
+	if ('conversion' in fn) {
+		wrappedFn.conversion = fn.conversion;
+	}
+
+	return wrappedFn;
+}
+
+function wrapRounded(fn) {
+	var wrappedFn = function (args) {
+		if (args === undefined || args === null) {
+			return args;
+		}
+
+		if (arguments.length > 1) {
+			args = Array.prototype.slice.call(arguments);
+		}
+
+		var result = fn(args);
+
+		// we're assuming the result is an array here.
+		// see notice in conversions.js; don't use box types
+		// in conversion functions.
+		if (typeof result === 'object') {
+			for (var len = result.length, i = 0; i < len; i++) {
+				result[i] = Math.round(result[i]);
+			}
+		}
+
+		return result;
+	};
+
+	// preserve .conversion property if there is one
+	if ('conversion' in fn) {
+		wrappedFn.conversion = fn.conversion;
+	}
+
+	return wrappedFn;
+}
+
+models.forEach(function (fromModel) {
+	convert[fromModel] = {};
+
+	Object.defineProperty(convert[fromModel], 'channels', {value: conversions[fromModel].channels});
+	Object.defineProperty(convert[fromModel], 'labels', {value: conversions[fromModel].labels});
+
+	var routes = route(fromModel);
+	var routeModels = Object.keys(routes);
+
+	routeModels.forEach(function (toModel) {
+		var fn = routes[toModel];
+
+		convert[fromModel][toModel] = wrapRounded(fn);
+		convert[fromModel][toModel].raw = wrapRaw(fn);
+	});
+});
+
+module.exports = convert;
+
+
+/***/ }),
+
+/***/ "./node_modules/color-convert/route.js":
+/*!*********************************************!*\
+  !*** ./node_modules/color-convert/route.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var conversions = __webpack_require__(/*! ./conversions */ "./node_modules/color-convert/conversions.js");
+
+/*
+	this function routes a model to all other models.
+
+	all functions that are routed have a property `.conversion` attached
+	to the returned synthetic function. This property is an array
+	of strings, each with the steps in between the 'from' and 'to'
+	color models (inclusive).
+
+	conversions that are not possible simply are not included.
+*/
+
+function buildGraph() {
+	var graph = {};
+	// https://jsperf.com/object-keys-vs-for-in-with-closure/3
+	var models = Object.keys(conversions);
+
+	for (var len = models.length, i = 0; i < len; i++) {
+		graph[models[i]] = {
+			// http://jsperf.com/1-vs-infinity
+			// micro-opt, but this is simple.
+			distance: -1,
+			parent: null
+		};
+	}
+
+	return graph;
+}
+
+// https://en.wikipedia.org/wiki/Breadth-first_search
+function deriveBFS(fromModel) {
+	var graph = buildGraph();
+	var queue = [fromModel]; // unshift -> queue -> pop
+
+	graph[fromModel].distance = 0;
+
+	while (queue.length) {
+		var current = queue.pop();
+		var adjacents = Object.keys(conversions[current]);
+
+		for (var len = adjacents.length, i = 0; i < len; i++) {
+			var adjacent = adjacents[i];
+			var node = graph[adjacent];
+
+			if (node.distance === -1) {
+				node.distance = graph[current].distance + 1;
+				node.parent = current;
+				queue.unshift(adjacent);
+			}
+		}
+	}
+
+	return graph;
+}
+
+function link(from, to) {
+	return function (args) {
+		return to(from(args));
+	};
+}
+
+function wrapConversion(toModel, graph) {
+	var path = [graph[toModel].parent, toModel];
+	var fn = conversions[graph[toModel].parent][toModel];
+
+	var cur = graph[toModel].parent;
+	while (graph[cur].parent) {
+		path.unshift(graph[cur].parent);
+		fn = link(conversions[graph[cur].parent][cur], fn);
+		cur = graph[cur].parent;
+	}
+
+	fn.conversion = path;
+	return fn;
+}
+
+module.exports = function (fromModel) {
+	var graph = deriveBFS(fromModel);
+	var conversion = {};
+
+	var models = Object.keys(graph);
+	for (var len = models.length, i = 0; i < len; i++) {
+		var toModel = models[i];
+		var node = graph[toModel];
+
+		if (node.parent === null) {
+			// no possible conversion, or this node is the source model.
+			continue;
+		}
+
+		conversion[toModel] = wrapConversion(toModel, graph);
+	}
+
+	return conversion;
+};
+
+
+
+/***/ }),
+
+/***/ "./node_modules/color-name/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/color-name/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+	"aliceblue": [240, 248, 255],
+	"antiquewhite": [250, 235, 215],
+	"aqua": [0, 255, 255],
+	"aquamarine": [127, 255, 212],
+	"azure": [240, 255, 255],
+	"beige": [245, 245, 220],
+	"bisque": [255, 228, 196],
+	"black": [0, 0, 0],
+	"blanchedalmond": [255, 235, 205],
+	"blue": [0, 0, 255],
+	"blueviolet": [138, 43, 226],
+	"brown": [165, 42, 42],
+	"burlywood": [222, 184, 135],
+	"cadetblue": [95, 158, 160],
+	"chartreuse": [127, 255, 0],
+	"chocolate": [210, 105, 30],
+	"coral": [255, 127, 80],
+	"cornflowerblue": [100, 149, 237],
+	"cornsilk": [255, 248, 220],
+	"crimson": [220, 20, 60],
+	"cyan": [0, 255, 255],
+	"darkblue": [0, 0, 139],
+	"darkcyan": [0, 139, 139],
+	"darkgoldenrod": [184, 134, 11],
+	"darkgray": [169, 169, 169],
+	"darkgreen": [0, 100, 0],
+	"darkgrey": [169, 169, 169],
+	"darkkhaki": [189, 183, 107],
+	"darkmagenta": [139, 0, 139],
+	"darkolivegreen": [85, 107, 47],
+	"darkorange": [255, 140, 0],
+	"darkorchid": [153, 50, 204],
+	"darkred": [139, 0, 0],
+	"darksalmon": [233, 150, 122],
+	"darkseagreen": [143, 188, 143],
+	"darkslateblue": [72, 61, 139],
+	"darkslategray": [47, 79, 79],
+	"darkslategrey": [47, 79, 79],
+	"darkturquoise": [0, 206, 209],
+	"darkviolet": [148, 0, 211],
+	"deeppink": [255, 20, 147],
+	"deepskyblue": [0, 191, 255],
+	"dimgray": [105, 105, 105],
+	"dimgrey": [105, 105, 105],
+	"dodgerblue": [30, 144, 255],
+	"firebrick": [178, 34, 34],
+	"floralwhite": [255, 250, 240],
+	"forestgreen": [34, 139, 34],
+	"fuchsia": [255, 0, 255],
+	"gainsboro": [220, 220, 220],
+	"ghostwhite": [248, 248, 255],
+	"gold": [255, 215, 0],
+	"goldenrod": [218, 165, 32],
+	"gray": [128, 128, 128],
+	"green": [0, 128, 0],
+	"greenyellow": [173, 255, 47],
+	"grey": [128, 128, 128],
+	"honeydew": [240, 255, 240],
+	"hotpink": [255, 105, 180],
+	"indianred": [205, 92, 92],
+	"indigo": [75, 0, 130],
+	"ivory": [255, 255, 240],
+	"khaki": [240, 230, 140],
+	"lavender": [230, 230, 250],
+	"lavenderblush": [255, 240, 245],
+	"lawngreen": [124, 252, 0],
+	"lemonchiffon": [255, 250, 205],
+	"lightblue": [173, 216, 230],
+	"lightcoral": [240, 128, 128],
+	"lightcyan": [224, 255, 255],
+	"lightgoldenrodyellow": [250, 250, 210],
+	"lightgray": [211, 211, 211],
+	"lightgreen": [144, 238, 144],
+	"lightgrey": [211, 211, 211],
+	"lightpink": [255, 182, 193],
+	"lightsalmon": [255, 160, 122],
+	"lightseagreen": [32, 178, 170],
+	"lightskyblue": [135, 206, 250],
+	"lightslategray": [119, 136, 153],
+	"lightslategrey": [119, 136, 153],
+	"lightsteelblue": [176, 196, 222],
+	"lightyellow": [255, 255, 224],
+	"lime": [0, 255, 0],
+	"limegreen": [50, 205, 50],
+	"linen": [250, 240, 230],
+	"magenta": [255, 0, 255],
+	"maroon": [128, 0, 0],
+	"mediumaquamarine": [102, 205, 170],
+	"mediumblue": [0, 0, 205],
+	"mediumorchid": [186, 85, 211],
+	"mediumpurple": [147, 112, 219],
+	"mediumseagreen": [60, 179, 113],
+	"mediumslateblue": [123, 104, 238],
+	"mediumspringgreen": [0, 250, 154],
+	"mediumturquoise": [72, 209, 204],
+	"mediumvioletred": [199, 21, 133],
+	"midnightblue": [25, 25, 112],
+	"mintcream": [245, 255, 250],
+	"mistyrose": [255, 228, 225],
+	"moccasin": [255, 228, 181],
+	"navajowhite": [255, 222, 173],
+	"navy": [0, 0, 128],
+	"oldlace": [253, 245, 230],
+	"olive": [128, 128, 0],
+	"olivedrab": [107, 142, 35],
+	"orange": [255, 165, 0],
+	"orangered": [255, 69, 0],
+	"orchid": [218, 112, 214],
+	"palegoldenrod": [238, 232, 170],
+	"palegreen": [152, 251, 152],
+	"paleturquoise": [175, 238, 238],
+	"palevioletred": [219, 112, 147],
+	"papayawhip": [255, 239, 213],
+	"peachpuff": [255, 218, 185],
+	"peru": [205, 133, 63],
+	"pink": [255, 192, 203],
+	"plum": [221, 160, 221],
+	"powderblue": [176, 224, 230],
+	"purple": [128, 0, 128],
+	"rebeccapurple": [102, 51, 153],
+	"red": [255, 0, 0],
+	"rosybrown": [188, 143, 143],
+	"royalblue": [65, 105, 225],
+	"saddlebrown": [139, 69, 19],
+	"salmon": [250, 128, 114],
+	"sandybrown": [244, 164, 96],
+	"seagreen": [46, 139, 87],
+	"seashell": [255, 245, 238],
+	"sienna": [160, 82, 45],
+	"silver": [192, 192, 192],
+	"skyblue": [135, 206, 235],
+	"slateblue": [106, 90, 205],
+	"slategray": [112, 128, 144],
+	"slategrey": [112, 128, 144],
+	"snow": [255, 250, 250],
+	"springgreen": [0, 255, 127],
+	"steelblue": [70, 130, 180],
+	"tan": [210, 180, 140],
+	"teal": [0, 128, 128],
+	"thistle": [216, 191, 216],
+	"tomato": [255, 99, 71],
+	"turquoise": [64, 224, 208],
+	"violet": [238, 130, 238],
+	"wheat": [245, 222, 179],
+	"white": [255, 255, 255],
+	"whitesmoke": [245, 245, 245],
+	"yellow": [255, 255, 0],
+	"yellowgreen": [154, 205, 50]
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/color-string/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/color-string/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* MIT license */
+var colorNames = __webpack_require__(/*! color-name */ "./node_modules/color-name/index.js");
+var swizzle = __webpack_require__(/*! simple-swizzle */ "./node_modules/simple-swizzle/index.js");
+
+var reverseNames = {};
+
+// create a list of reverse color names
+for (var name in colorNames) {
+	if (colorNames.hasOwnProperty(name)) {
+		reverseNames[colorNames[name]] = name;
+	}
+}
+
+var cs = module.exports = {
+	to: {}
+};
+
+cs.get = function (string) {
+	var prefix = string.substring(0, 3).toLowerCase();
+	var val;
+	var model;
+	switch (prefix) {
+		case 'hsl':
+			val = cs.get.hsl(string);
+			model = 'hsl';
+			break;
+		case 'hwb':
+			val = cs.get.hwb(string);
+			model = 'hwb';
+			break;
+		default:
+			val = cs.get.rgb(string);
+			model = 'rgb';
+			break;
+	}
+
+	if (!val) {
+		return null;
+	}
+
+	return {model: model, value: val};
+};
+
+cs.get.rgb = function (string) {
+	if (!string) {
+		return null;
+	}
+
+	var abbr = /^#([a-f0-9]{3,4})$/i;
+	var hex = /^#([a-f0-9]{6})([a-f0-9]{2})?$/i;
+	var rgba = /^rgba?\(\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
+	var per = /^rgba?\(\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
+	var keyword = /(\D+)/;
+
+	var rgb = [0, 0, 0, 1];
+	var match;
+	var i;
+	var hexAlpha;
+
+	if (match = string.match(hex)) {
+		hexAlpha = match[2];
+		match = match[1];
+
+		for (i = 0; i < 3; i++) {
+			// https://jsperf.com/slice-vs-substr-vs-substring-methods-long-string/19
+			var i2 = i * 2;
+			rgb[i] = parseInt(match.slice(i2, i2 + 2), 16);
+		}
+
+		if (hexAlpha) {
+			rgb[3] = Math.round((parseInt(hexAlpha, 16) / 255) * 100) / 100;
+		}
+	} else if (match = string.match(abbr)) {
+		match = match[1];
+		hexAlpha = match[3];
+
+		for (i = 0; i < 3; i++) {
+			rgb[i] = parseInt(match[i] + match[i], 16);
+		}
+
+		if (hexAlpha) {
+			rgb[3] = Math.round((parseInt(hexAlpha + hexAlpha, 16) / 255) * 100) / 100;
+		}
+	} else if (match = string.match(rgba)) {
+		for (i = 0; i < 3; i++) {
+			rgb[i] = parseInt(match[i + 1], 0);
+		}
+
+		if (match[4]) {
+			rgb[3] = parseFloat(match[4]);
+		}
+	} else if (match = string.match(per)) {
+		for (i = 0; i < 3; i++) {
+			rgb[i] = Math.round(parseFloat(match[i + 1]) * 2.55);
+		}
+
+		if (match[4]) {
+			rgb[3] = parseFloat(match[4]);
+		}
+	} else if (match = string.match(keyword)) {
+		if (match[1] === 'transparent') {
+			return [0, 0, 0, 0];
+		}
+
+		rgb = colorNames[match[1]];
+
+		if (!rgb) {
+			return null;
+		}
+
+		rgb[3] = 1;
+
+		return rgb;
+	} else {
+		return null;
+	}
+
+	for (i = 0; i < 3; i++) {
+		rgb[i] = clamp(rgb[i], 0, 255);
+	}
+	rgb[3] = clamp(rgb[3], 0, 1);
+
+	return rgb;
+};
+
+cs.get.hsl = function (string) {
+	if (!string) {
+		return null;
+	}
+
+	var hsl = /^hsla?\(\s*([+-]?\d*[\.]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
+	var match = string.match(hsl);
+
+	if (match) {
+		var alpha = parseFloat(match[4]);
+		var h = ((parseFloat(match[1]) % 360) + 360) % 360;
+		var s = clamp(parseFloat(match[2]), 0, 100);
+		var l = clamp(parseFloat(match[3]), 0, 100);
+		var a = clamp(isNaN(alpha) ? 1 : alpha, 0, 1);
+
+		return [h, s, l, a];
+	}
+
+	return null;
+};
+
+cs.get.hwb = function (string) {
+	if (!string) {
+		return null;
+	}
+
+	var hwb = /^hwb\(\s*([+-]?\d*[\.]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
+	var match = string.match(hwb);
+
+	if (match) {
+		var alpha = parseFloat(match[4]);
+		var h = ((parseFloat(match[1]) % 360) + 360) % 360;
+		var w = clamp(parseFloat(match[2]), 0, 100);
+		var b = clamp(parseFloat(match[3]), 0, 100);
+		var a = clamp(isNaN(alpha) ? 1 : alpha, 0, 1);
+		return [h, w, b, a];
+	}
+
+	return null;
+};
+
+cs.to.hex = function () {
+	var rgba = swizzle(arguments);
+
+	return (
+		'#' +
+		hexDouble(rgba[0]) +
+		hexDouble(rgba[1]) +
+		hexDouble(rgba[2]) +
+		(rgba[3] < 1
+			? (hexDouble(Math.round(rgba[3] * 255)))
+			: '')
+	);
+};
+
+cs.to.rgb = function () {
+	var rgba = swizzle(arguments);
+
+	return rgba.length < 4 || rgba[3] === 1
+		? 'rgb(' + Math.round(rgba[0]) + ', ' + Math.round(rgba[1]) + ', ' + Math.round(rgba[2]) + ')'
+		: 'rgba(' + Math.round(rgba[0]) + ', ' + Math.round(rgba[1]) + ', ' + Math.round(rgba[2]) + ', ' + rgba[3] + ')';
+};
+
+cs.to.rgb.percent = function () {
+	var rgba = swizzle(arguments);
+
+	var r = Math.round(rgba[0] / 255 * 100);
+	var g = Math.round(rgba[1] / 255 * 100);
+	var b = Math.round(rgba[2] / 255 * 100);
+
+	return rgba.length < 4 || rgba[3] === 1
+		? 'rgb(' + r + '%, ' + g + '%, ' + b + '%)'
+		: 'rgba(' + r + '%, ' + g + '%, ' + b + '%, ' + rgba[3] + ')';
+};
+
+cs.to.hsl = function () {
+	var hsla = swizzle(arguments);
+	return hsla.length < 4 || hsla[3] === 1
+		? 'hsl(' + hsla[0] + ', ' + hsla[1] + '%, ' + hsla[2] + '%)'
+		: 'hsla(' + hsla[0] + ', ' + hsla[1] + '%, ' + hsla[2] + '%, ' + hsla[3] + ')';
+};
+
+// hwb is a bit different than rgb(a) & hsl(a) since there is no alpha specific syntax
+// (hwb have alpha optional & 1 is default value)
+cs.to.hwb = function () {
+	var hwba = swizzle(arguments);
+
+	var a = '';
+	if (hwba.length >= 4 && hwba[3] !== 1) {
+		a = ', ' + hwba[3];
+	}
+
+	return 'hwb(' + hwba[0] + ', ' + hwba[1] + '%, ' + hwba[2] + '%' + a + ')';
+};
+
+cs.to.keyword = function (rgb) {
+	return reverseNames[rgb.slice(0, 3)];
+};
+
+// helpers
+function clamp(num, min, max) {
+	return Math.min(Math.max(min, num), max);
+}
+
+function hexDouble(num) {
+	var str = num.toString(16).toUpperCase();
+	return (str.length < 2) ? '0' + str : str;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/color/index.js":
+/*!*************************************!*\
+  !*** ./node_modules/color/index.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var colorString = __webpack_require__(/*! color-string */ "./node_modules/color-string/index.js");
+var convert = __webpack_require__(/*! color-convert */ "./node_modules/color-convert/index.js");
+
+var _slice = [].slice;
+
+var skippedModels = [
+	// to be honest, I don't really feel like keyword belongs in color convert, but eh.
+	'keyword',
+
+	// gray conflicts with some method names, and has its own method defined.
+	'gray',
+
+	// shouldn't really be in color-convert either...
+	'hex'
+];
+
+var hashedModelKeys = {};
+Object.keys(convert).forEach(function (model) {
+	hashedModelKeys[_slice.call(convert[model].labels).sort().join('')] = model;
+});
+
+var limiters = {};
+
+function Color(obj, model) {
+	if (!(this instanceof Color)) {
+		return new Color(obj, model);
+	}
+
+	if (model && model in skippedModels) {
+		model = null;
+	}
+
+	if (model && !(model in convert)) {
+		throw new Error('Unknown model: ' + model);
+	}
+
+	var i;
+	var channels;
+
+	if (!obj) {
+		this.model = 'rgb';
+		this.color = [0, 0, 0];
+		this.valpha = 1;
+	} else if (obj instanceof Color) {
+		this.model = obj.model;
+		this.color = obj.color.slice();
+		this.valpha = obj.valpha;
+	} else if (typeof obj === 'string') {
+		var result = colorString.get(obj);
+		if (result === null) {
+			throw new Error('Unable to parse color from string: ' + obj);
+		}
+
+		this.model = result.model;
+		channels = convert[this.model].channels;
+		this.color = result.value.slice(0, channels);
+		this.valpha = typeof result.value[channels] === 'number' ? result.value[channels] : 1;
+	} else if (obj.length) {
+		this.model = model || 'rgb';
+		channels = convert[this.model].channels;
+		var newArr = _slice.call(obj, 0, channels);
+		this.color = zeroArray(newArr, channels);
+		this.valpha = typeof obj[channels] === 'number' ? obj[channels] : 1;
+	} else if (typeof obj === 'number') {
+		// this is always RGB - can be converted later on.
+		obj &= 0xFFFFFF;
+		this.model = 'rgb';
+		this.color = [
+			(obj >> 16) & 0xFF,
+			(obj >> 8) & 0xFF,
+			obj & 0xFF
+		];
+		this.valpha = 1;
+	} else {
+		this.valpha = 1;
+
+		var keys = Object.keys(obj);
+		if ('alpha' in obj) {
+			keys.splice(keys.indexOf('alpha'), 1);
+			this.valpha = typeof obj.alpha === 'number' ? obj.alpha : 0;
+		}
+
+		var hashedKeys = keys.sort().join('');
+		if (!(hashedKeys in hashedModelKeys)) {
+			throw new Error('Unable to parse color from object: ' + JSON.stringify(obj));
+		}
+
+		this.model = hashedModelKeys[hashedKeys];
+
+		var labels = convert[this.model].labels;
+		var color = [];
+		for (i = 0; i < labels.length; i++) {
+			color.push(obj[labels[i]]);
+		}
+
+		this.color = zeroArray(color);
+	}
+
+	// perform limitations (clamping, etc.)
+	if (limiters[this.model]) {
+		channels = convert[this.model].channels;
+		for (i = 0; i < channels; i++) {
+			var limit = limiters[this.model][i];
+			if (limit) {
+				this.color[i] = limit(this.color[i]);
+			}
+		}
+	}
+
+	this.valpha = Math.max(0, Math.min(1, this.valpha));
+
+	if (Object.freeze) {
+		Object.freeze(this);
+	}
+}
+
+Color.prototype = {
+	toString: function () {
+		return this.string();
+	},
+
+	toJSON: function () {
+		return this[this.model]();
+	},
+
+	string: function (places) {
+		var self = this.model in colorString.to ? this : this.rgb();
+		self = self.round(typeof places === 'number' ? places : 1);
+		var args = self.valpha === 1 ? self.color : self.color.concat(this.valpha);
+		return colorString.to[self.model](args);
+	},
+
+	percentString: function (places) {
+		var self = this.rgb().round(typeof places === 'number' ? places : 1);
+		var args = self.valpha === 1 ? self.color : self.color.concat(this.valpha);
+		return colorString.to.rgb.percent(args);
+	},
+
+	array: function () {
+		return this.valpha === 1 ? this.color.slice() : this.color.concat(this.valpha);
+	},
+
+	object: function () {
+		var result = {};
+		var channels = convert[this.model].channels;
+		var labels = convert[this.model].labels;
+
+		for (var i = 0; i < channels; i++) {
+			result[labels[i]] = this.color[i];
+		}
+
+		if (this.valpha !== 1) {
+			result.alpha = this.valpha;
+		}
+
+		return result;
+	},
+
+	unitArray: function () {
+		var rgb = this.rgb().color;
+		rgb[0] /= 255;
+		rgb[1] /= 255;
+		rgb[2] /= 255;
+
+		if (this.valpha !== 1) {
+			rgb.push(this.valpha);
+		}
+
+		return rgb;
+	},
+
+	unitObject: function () {
+		var rgb = this.rgb().object();
+		rgb.r /= 255;
+		rgb.g /= 255;
+		rgb.b /= 255;
+
+		if (this.valpha !== 1) {
+			rgb.alpha = this.valpha;
+		}
+
+		return rgb;
+	},
+
+	round: function (places) {
+		places = Math.max(places || 0, 0);
+		return new Color(this.color.map(roundToPlace(places)).concat(this.valpha), this.model);
+	},
+
+	alpha: function (val) {
+		if (arguments.length) {
+			return new Color(this.color.concat(Math.max(0, Math.min(1, val))), this.model);
+		}
+
+		return this.valpha;
+	},
+
+	// rgb
+	red: getset('rgb', 0, maxfn(255)),
+	green: getset('rgb', 1, maxfn(255)),
+	blue: getset('rgb', 2, maxfn(255)),
+
+	hue: getset(['hsl', 'hsv', 'hsl', 'hwb', 'hcg'], 0, function (val) { return ((val % 360) + 360) % 360; }), // eslint-disable-line brace-style
+
+	saturationl: getset('hsl', 1, maxfn(100)),
+	lightness: getset('hsl', 2, maxfn(100)),
+
+	saturationv: getset('hsv', 1, maxfn(100)),
+	value: getset('hsv', 2, maxfn(100)),
+
+	chroma: getset('hcg', 1, maxfn(100)),
+	gray: getset('hcg', 2, maxfn(100)),
+
+	white: getset('hwb', 1, maxfn(100)),
+	wblack: getset('hwb', 2, maxfn(100)),
+
+	cyan: getset('cmyk', 0, maxfn(100)),
+	magenta: getset('cmyk', 1, maxfn(100)),
+	yellow: getset('cmyk', 2, maxfn(100)),
+	black: getset('cmyk', 3, maxfn(100)),
+
+	x: getset('xyz', 0, maxfn(100)),
+	y: getset('xyz', 1, maxfn(100)),
+	z: getset('xyz', 2, maxfn(100)),
+
+	l: getset('lab', 0, maxfn(100)),
+	a: getset('lab', 1),
+	b: getset('lab', 2),
+
+	keyword: function (val) {
+		if (arguments.length) {
+			return new Color(val);
+		}
+
+		return convert[this.model].keyword(this.color);
+	},
+
+	hex: function (val) {
+		if (arguments.length) {
+			return new Color(val);
+		}
+
+		return colorString.to.hex(this.rgb().round().color);
+	},
+
+	rgbNumber: function () {
+		var rgb = this.rgb().color;
+		return ((rgb[0] & 0xFF) << 16) | ((rgb[1] & 0xFF) << 8) | (rgb[2] & 0xFF);
+	},
+
+	luminosity: function () {
+		// http://www.w3.org/TR/WCAG20/#relativeluminancedef
+		var rgb = this.rgb().color;
+
+		var lum = [];
+		for (var i = 0; i < rgb.length; i++) {
+			var chan = rgb[i] / 255;
+			lum[i] = (chan <= 0.03928) ? chan / 12.92 : Math.pow(((chan + 0.055) / 1.055), 2.4);
+		}
+
+		return 0.2126 * lum[0] + 0.7152 * lum[1] + 0.0722 * lum[2];
+	},
+
+	contrast: function (color2) {
+		// http://www.w3.org/TR/WCAG20/#contrast-ratiodef
+		var lum1 = this.luminosity();
+		var lum2 = color2.luminosity();
+
+		if (lum1 > lum2) {
+			return (lum1 + 0.05) / (lum2 + 0.05);
+		}
+
+		return (lum2 + 0.05) / (lum1 + 0.05);
+	},
+
+	level: function (color2) {
+		var contrastRatio = this.contrast(color2);
+		if (contrastRatio >= 7.1) {
+			return 'AAA';
+		}
+
+		return (contrastRatio >= 4.5) ? 'AA' : '';
+	},
+
+	isDark: function () {
+		// YIQ equation from http://24ways.org/2010/calculating-color-contrast
+		var rgb = this.rgb().color;
+		var yiq = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;
+		return yiq < 128;
+	},
+
+	isLight: function () {
+		return !this.isDark();
+	},
+
+	negate: function () {
+		var rgb = this.rgb();
+		for (var i = 0; i < 3; i++) {
+			rgb.color[i] = 255 - rgb.color[i];
+		}
+		return rgb;
+	},
+
+	lighten: function (ratio) {
+		var hsl = this.hsl();
+		hsl.color[2] += hsl.color[2] * ratio;
+		return hsl;
+	},
+
+	darken: function (ratio) {
+		var hsl = this.hsl();
+		hsl.color[2] -= hsl.color[2] * ratio;
+		return hsl;
+	},
+
+	saturate: function (ratio) {
+		var hsl = this.hsl();
+		hsl.color[1] += hsl.color[1] * ratio;
+		return hsl;
+	},
+
+	desaturate: function (ratio) {
+		var hsl = this.hsl();
+		hsl.color[1] -= hsl.color[1] * ratio;
+		return hsl;
+	},
+
+	whiten: function (ratio) {
+		var hwb = this.hwb();
+		hwb.color[1] += hwb.color[1] * ratio;
+		return hwb;
+	},
+
+	blacken: function (ratio) {
+		var hwb = this.hwb();
+		hwb.color[2] += hwb.color[2] * ratio;
+		return hwb;
+	},
+
+	grayscale: function () {
+		// http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+		var rgb = this.rgb().color;
+		var val = rgb[0] * 0.3 + rgb[1] * 0.59 + rgb[2] * 0.11;
+		return Color.rgb(val, val, val);
+	},
+
+	fade: function (ratio) {
+		return this.alpha(this.valpha - (this.valpha * ratio));
+	},
+
+	opaquer: function (ratio) {
+		return this.alpha(this.valpha + (this.valpha * ratio));
+	},
+
+	rotate: function (degrees) {
+		var hsl = this.hsl();
+		var hue = hsl.color[0];
+		hue = (hue + degrees) % 360;
+		hue = hue < 0 ? 360 + hue : hue;
+		hsl.color[0] = hue;
+		return hsl;
+	},
+
+	mix: function (mixinColor, weight) {
+		// ported from sass implementation in C
+		// https://github.com/sass/libsass/blob/0e6b4a2850092356aa3ece07c6b249f0221caced/functions.cpp#L209
+		var color1 = mixinColor.rgb();
+		var color2 = this.rgb();
+		var p = weight === undefined ? 0.5 : weight;
+
+		var w = 2 * p - 1;
+		var a = color1.alpha() - color2.alpha();
+
+		var w1 = (((w * a === -1) ? w : (w + a) / (1 + w * a)) + 1) / 2.0;
+		var w2 = 1 - w1;
+
+		return Color.rgb(
+				w1 * color1.red() + w2 * color2.red(),
+				w1 * color1.green() + w2 * color2.green(),
+				w1 * color1.blue() + w2 * color2.blue(),
+				color1.alpha() * p + color2.alpha() * (1 - p));
+	}
+};
+
+// model conversion methods and static constructors
+Object.keys(convert).forEach(function (model) {
+	if (skippedModels.indexOf(model) !== -1) {
+		return;
+	}
+
+	var channels = convert[model].channels;
+
+	// conversion methods
+	Color.prototype[model] = function () {
+		if (this.model === model) {
+			return new Color(this);
+		}
+
+		if (arguments.length) {
+			return new Color(arguments, model);
+		}
+
+		var newAlpha = typeof arguments[channels] === 'number' ? channels : this.valpha;
+		return new Color(assertArray(convert[this.model][model].raw(this.color)).concat(newAlpha), model);
+	};
+
+	// 'static' construction methods
+	Color[model] = function (color) {
+		if (typeof color === 'number') {
+			color = zeroArray(_slice.call(arguments), channels);
+		}
+		return new Color(color, model);
+	};
+});
+
+function roundTo(num, places) {
+	return Number(num.toFixed(places));
+}
+
+function roundToPlace(places) {
+	return function (num) {
+		return roundTo(num, places);
+	};
+}
+
+function getset(model, channel, modifier) {
+	model = Array.isArray(model) ? model : [model];
+
+	model.forEach(function (m) {
+		(limiters[m] || (limiters[m] = []))[channel] = modifier;
+	});
+
+	model = model[0];
+
+	return function (val) {
+		var result;
+
+		if (arguments.length) {
+			if (modifier) {
+				val = modifier(val);
+			}
+
+			result = this[model]();
+			result.color[channel] = val;
+			return result;
+		}
+
+		result = this[model]().color[channel];
+		if (modifier) {
+			result = modifier(result);
+		}
+
+		return result;
+	};
+}
+
+function maxfn(max) {
+	return function (v) {
+		return Math.max(0, Math.min(max, v));
+	};
+}
+
+function assertArray(val) {
+	return Array.isArray(val) ? val : [val];
+}
+
+function zeroArray(arr, length) {
+	for (var i = 0; i < length; i++) {
+		if (typeof arr[i] !== 'number') {
+			arr[i] = 0;
+		}
+	}
+
+	return arr;
+}
+
+module.exports = Color;
+
+
+/***/ }),
+
+/***/ "./node_modules/simple-swizzle/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/simple-swizzle/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isArrayish = __webpack_require__(/*! is-arrayish */ "./node_modules/simple-swizzle/node_modules/is-arrayish/index.js");
+
+var concat = Array.prototype.concat;
+var slice = Array.prototype.slice;
+
+var swizzle = module.exports = function swizzle(args) {
+	var results = [];
+
+	for (var i = 0, len = args.length; i < len; i++) {
+		var arg = args[i];
+
+		if (isArrayish(arg)) {
+			// http://jsperf.com/javascript-array-concat-vs-push/98
+			results = concat.call(results, slice.call(arg));
+		} else {
+			results.push(arg);
+		}
+	}
+
+	return results;
+};
+
+swizzle.wrap = function (fn) {
+	return function () {
+		return fn(swizzle(arguments));
+	};
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/simple-swizzle/node_modules/is-arrayish/index.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/simple-swizzle/node_modules/is-arrayish/index.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function isArrayish(obj) {
+	if (!obj || typeof obj === 'string') {
+		return false;
+	}
+
+	return obj instanceof Array || Array.isArray(obj) ||
+		(obj.length >= 0 && (obj.splice instanceof Function ||
+			(Object.getOwnPropertyDescriptor(obj, (obj.length - 1)) && obj.constructor.name !== 'String')));
+};
+
+
+/***/ }),
+
+/***/ "./src/ezcanvas/Animation.js":
+/*!***********************************!*\
+  !*** ./src/ezcanvas/Animation.js ***!
+  \***********************************/
+/*! exports provided: Canvas, Animation */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Canvas", function() { return Canvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return Animation; });
+class Animation {
+  // Build an animation based on the passed parameters
+  constructor(
+    params = {
+      // Defaults to the first canvas
+      canvas: 0,
+      // Duration defaults to 1 second
+      duration: 1000,
+      // Easing defaults to linear (no easing)
+      easing: t => {
+        return t
+      },
+      // Looping defaults to false
+      loop: false
+    }
+  ) {
+    this.canvases = params.canvases
+    this.canvas = typeof params.canvas === 'number' ? params.canvas : 0
+    this.duration = typeof params.duration === 'number' ? params.duration : 1000
+    this.easing =
+      typeof params.easing === 'function'
+        ? params.easing
+        : t => {
+            return t
+          }
+    this.loop = typeof params.loop === 'boolean' ? params.loop : false
+    this.progress = 0
+    this.shapes = []
+    this.images = []
+    this.startTime = null
+  }
+}
+
+class Canvas {
+  // Construct a new canvas based on the passed parameters
+  constructor(
+    params = {
+      // Size defaults to the size of the viewport
+      size: [window.innerWidth, window.innerHeight],
+      // Canvas element defaults to the first canvas on the page
+      el: 'canvas',
+      // Resize defaults to false
+      resize: false
+    }
+  ) {
+    this.c =
+      typeof params.el === 'string'
+        ? document.querySelector(params.el)
+        : document.querySelector('canvas')
+    this.ctx = this.c.getContext('2d')
+    if (params.resize) {
+      window.addEventListener('resize', () => {
+        this.setSize(params.size)
+      })
+    }
+    this.setSize(params.size)
+    this.animations = []
+  }
+
+  // Set's the size of the canvas based on the resolution of the client
+  setSize(obj) {
+    this.ctx.canvas.width =
+      typeof obj === 'object'
+        ? obj[0] * window.devicePixelRatio
+        : window.innerWidth * window.devicePixelRatio
+    this.ctx.canvas.height =
+      typeof obj === 'object'
+        ? obj[1] * window.devicePixelRatio
+        : window.innerHeight * window.devicePixelRatio
+    this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./src/ezcanvas/Image.js":
+/*!*******************************!*\
+  !*** ./src/ezcanvas/Image.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CanvasImage; });
+// We use CanvasImage because Image is a global object
+class CanvasImage {
+  // Build an animation based of the passed parameters
+  constructor(params) {
+    // GCO defaults to source-over (normal)
+    this.GCO = typeof params.GCO === 'string' ? params.GCO : 'source-over'
+    // Creates a new image
+    this.image = new window.Image()
+    // Width and height default to whatever the dimensions of the passed image are
+    this.w = typeof params.w === 'number' ? params.w : this.image.width
+    this.h = typeof params.h === 'number' ? params.h : this.image.height
+    // Check if image has loaded
+    this.loaded = false
+    this.image.onLoad = () => {
+      this.loaded = true
+    }
+    // If no image src is set, put a placeholder in it's place
+    this.image.src =
+      typeof params.src === 'string'
+        ? params.src
+        : 'http://placehold.it/500x500?text=Image+Must+Be+A+String'
+    this.canvases = params.canvases
+    this.canvas = typeof params.canvas === 'number' ? params.canvas : 0
+    this.animations = params.animations
+    this.animation = typeof params.animation === 'number' ? params.animation : 0
+
+    // Start position must be specified, end position defaults to start
+    if (
+      (typeof params.position.start === 'object' &&
+        typeof params.position.end === 'object') ||
+      typeof params.position.end === 'undefined'
+    ) {
+      this.pos = {
+        start: params.position.start,
+        end:
+          typeof params.position.end === 'object'
+            ? params.position.end
+            : params.position.start
+      }
+      this.fill = typeof params.fill === 'string' ? params.fill : '#000000'
+    } else {
+      throw new Error(
+        'New shapes require a starting position (array: [startX, startY])'
+      )
+    }
+
+    // Rotation defaults to none
+    this.rot = {
+      start: 0,
+      end: 0
+    }
+
+    // End rotation defaults to start
+    if (typeof params.rotation === 'object') {
+      if (
+        (typeof params.rotation.start === 'number' &&
+          typeof params.rotation.end === 'number') ||
+        typeof params.rotation.end === 'undefined'
+      ) {
+        this.rot = {
+          start: params.rotation.start,
+          end:
+            typeof params.rotation.end === 'number'
+              ? params.rotation.end
+              : params.rotation.start
+        }
+      }
+    }
+
+    // Scale defaults to none
+    this.scale = {
+      start: 1,
+      end: 1
+    }
+
+    // End scale defaults to start
+    if (typeof params.scale === 'object') {
+      if (
+        (typeof params.scale.start === 'number' &&
+          typeof params.scale.end === 'number') ||
+        typeof params.scale.end === 'undefined'
+      ) {
+        this.scale = {
+          start: params.scale.start,
+          end:
+            typeof params.scale.end === 'number'
+              ? params.scale.end
+              : params.scale.start
+        }
+      }
+    }
+
+    // Opacity defaults to 1
+    this.opacity = {
+      start: 1,
+      end: 1
+    }
+
+    // End opacity defaults to start
+    if (typeof params.opacity === 'object') {
+      if (
+        (typeof params.opacity.start === 'number' &&
+          typeof params.opacity.end === 'number') ||
+        typeof params.opacity.end === 'undefined'
+      ) {
+        this.opacity = {
+          start: params.opacity.start,
+          end:
+            typeof params.opacity.end === 'number'
+              ? params.opacity.end
+              : params.opacity.start
+        }
+      }
+    }
+  }
+
+  // Work out current position based on progress
+  currentPosition(p) {
+    const x =
+      this.pos.start[0] +
+      (this.pos.end[0] - this.pos.start[0]) *
+        this.animations[this.animation].easing(p)
+    const y =
+      this.pos.start[1] +
+      (this.pos.end[1] - this.pos.start[1]) *
+        this.animations[this.animation].easing(p)
+    return [x, y]
+  }
+
+  // Work out current rotation based on progress
+  currentRotation(p) {
+    return (
+      this.rot.start +
+      (this.rot.end - this.rot.start) *
+        this.animations[this.animation].easing(p)
+    )
+  }
+
+  // Work out current scale based on progress
+  currentScale(p) {
+    let w = this.w * this.scale.start
+    let h = this.h * this.scale.start
+
+    if (this.scale.start !== this.scale.end) {
+      w =
+        this.w +
+        this.w *
+          ((this.scale.start + (this.scale.end - this.scale.start)) *
+            this.animations[this.animation].easing(p) -
+            this.animations[this.animation].easing(p))
+      h =
+        this.h +
+        this.h *
+          ((this.scale.start + (this.scale.end - this.scale.start)) *
+            this.animations[this.animation].easing(p) -
+            this.animations[this.animation].easing(p))
+    }
+
+    return [w, h]
+  }
+
+  // Work out current opacity based on progress
+  currentOpacity(p) {
+    return (
+      this.opacity.start +
+      (this.opacity.end - this.opacity.start) *
+        this.animations[this.animation].easing(p)
+    )
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/ezcanvas/Shape.js":
+/*!*******************************!*\
+  !*** ./src/ezcanvas/Shape.js ***!
+  \*******************************/
+/*! exports provided: Circle, Rectangle */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return Circle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Rectangle", function() { return Rectangle; });
+// Generic shape
+class Shape {
+  constructor(params) {
+    this.type
+    this.animations = params.animations
+    this.GCO = typeof params.GCO === 'string' ? params.GCO : 'source-over'
+    this.animation = typeof params.animation === 'number' ? params.animation : 0
+
+    // Start position must be specified, end position defaults to start
+    if (
+      (typeof params.position.start === 'object' &&
+        typeof params.position.end === 'object') ||
+      typeof params.position.end === 'undefined'
+    ) {
+      this.pos = {
+        start: params.position.start,
+        end:
+          typeof params.position.end === 'object'
+            ? params.position.end
+            : params.position.start
+      }
+      this.fill = typeof params.fill === 'string' ? params.fill : '#000000'
+    } else {
+      throw new Error(
+        'New shapes require a starting position (array: [startX, startY] )'
+      )
+    }
+
+    // Rotation defaults to none
+    this.rot = {
+      start: 0,
+      end: 0
+    }
+
+    // End rotation defaults to start
+    if (typeof params.rotation === 'object') {
+      if (
+        (typeof params.rotation.start === 'number' &&
+          typeof params.rotation.end === 'number') ||
+        typeof params.rotation.end === 'undefined'
+      ) {
+        this.rot = {
+          start: params.rotation.start,
+          end:
+            typeof params.rotation.end === 'number'
+              ? params.rotation.end
+              : params.rotation.start
+        }
+      }
+    }
+
+    // Scale defaults to none
+    this.scale = {
+      start: 1,
+      end: 1
+    }
+
+    // End scale defaults to start
+    if (typeof params.scale === 'object') {
+      if (
+        (typeof params.scale.start === 'number' &&
+          typeof params.scale.end === 'number') ||
+        typeof params.scale.end === 'undefined'
+      ) {
+        this.scale = {
+          start: params.scale.start,
+          end:
+            typeof params.scale.end === 'number'
+              ? params.scale.end
+              : params.scale.start
+        }
+      }
+    }
+
+    // Opacity defaults to 1
+    this.opacity = {
+      start: 1,
+      end: 1
+    }
+
+    // End opacity defaults to start
+    if (typeof params.opacity === 'object') {
+      if (
+        (typeof params.opacity.start === 'number' &&
+          typeof params.opacity.end === 'number') ||
+        typeof params.opacity.end === 'undefined'
+      ) {
+        this.opacity = {
+          start: params.opacity.start,
+          end:
+            typeof params.opacity.end === 'number'
+              ? params.opacity.end
+              : params.opacity.start
+        }
+      }
+    }
+  }
+
+  // Work out current position based on progress
+  currentPosition(p) {
+    const x =
+      this.pos.start[0] +
+      (this.pos.end[0] - this.pos.start[0]) *
+        this.animations[this.animation].easing(p)
+    const y =
+      this.pos.start[1] +
+      (this.pos.end[1] - this.pos.start[1]) *
+        this.animations[this.animation].easing(p)
+    return [x, y]
+  }
+
+  // Work out current rotation based on progress
+  currentRotation(p) {
+    return (
+      this.rot.start +
+      (this.rot.end - this.rot.start) *
+        this.animations[this.animation].easing(p)
+    )
+  }
+
+  // Work out current opacity based on progress
+  currentOpacity(p) {
+    return (
+      this.opacity.start +
+      (this.opacity.end - this.opacity.start) *
+        this.animations[this.animation].easing(p)
+    )
+  }
+}
+
+class Circle extends Shape {
+  constructor(params) {
+    // Has all the parameters as a generic shape, as well as a radius
+    super(params)
+    // Radius defaults to 75px
+    this.r = typeof params.r === 'number' ? params.r : 75
+  }
+
+  // Work out current scale based on progress
+  currentScale(p) {
+    if (this.scale.start !== this.scale.end) {
+      return (
+        this.r +
+        this.r *
+          ((this.scale.start + (this.scale.end - this.scale.start)) *
+            this.animations[this.animation].easing(p) -
+            this.animations[this.animation].easing(p))
+      )
+    }
+
+    return this.r * this.scale.start
+  }
+
+  // Draw the circle on the canvas
+  draw(pos, r) {
+    this.animations[this.animation].canvases[
+      this.animations[this.animation].canvas
+    ].ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI)
+  }
+}
+
+class Rectangle extends Shape {
+  constructor(params) {
+    // Has all the parameters as a generic shape, as well as a width & height
+    super(params)
+    // Width and height default to 75px
+    this.w = typeof params.w === 'number' ? params.w : 75
+    this.h = typeof params.h === 'number' ? params.h : 75
+  }
+
+  // Work out current scale based on progress
+  currentScale(p) {
+    let w = this.w * this.scale.start
+    let h = this.h * this.scale.start
+
+    if (this.scale.start !== this.scale.end) {
+      w =
+        this.w +
+        this.w *
+          ((this.scale.start + (this.scale.end - this.scale.start)) *
+            this.animations[this.animation].easing(p) -
+            this.animations[this.animation].easing(p))
+      h =
+        this.h +
+        this.h *
+          ((this.scale.start + (this.scale.end - this.scale.start)) *
+            this.animations[this.animation].easing(p) -
+            this.animations[this.animation].easing(p))
+    }
+
+    return [w, h]
+  }
+
+  // Draw the rectangle on the canvas
+  draw(pos, wh) {
+    this.animations[this.animation].canvases[
+      this.animations[this.animation].canvas
+    ].ctx.rect(pos[0], pos[1], wh[0], wh[1])
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! exports provided: EZCanvas, Ease */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EZCanvas", function() { return EZCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Ease", function() { return Ease; });
+/* harmony import */ var _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ezcanvas/Animation.js */ "./src/ezcanvas/Animation.js");
+/* harmony import */ var _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ezcanvas/Shape.js */ "./src/ezcanvas/Shape.js");
+/* harmony import */ var _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ezcanvas/Image.js */ "./src/ezcanvas/Image.js");
+/* harmony import */ var color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! color */ "./node_modules/color/index.js");
+/* harmony import */ var color__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(color__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+
+
+
+/*
+  The Ease object contains several functions which take the progress,
+  and modify it to create an ease in the animation. These can be applied
+  on a per-canvas basis.
+*/
+const Ease = {
+  inQuad: t => t * t,
+  outQuad: t => t * (2 - t),
+  inOutQuad: t => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
+  inCubic: t => t * t * t,
+  outCubic: t => --t * t * t + 1,
+  inOutCubic: t =>
+    t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
+  inQuart: t => t * t * t * t,
+  outQuart: t => 1 - --t * t * t * t,
+  inOutQuart: t => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t),
+  inQuint: t => t * t * t * t * t,
+  outQuint: t => 1 + --t * t * t * t * t,
+  inOutQuint: t =>
+    t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t
+}
+
+const EZCanvas = (() => {
+  let canvases = []
+  let nextFrame
+
+  // Position items on the frame
+  const _positionItems = (items, progress, animation, canvas) => {
+    // Loop through all the items (items are either shapes or images)
+    for (let i = 0; i < items.length; i++) {
+      // Set the GCO
+      canvas.ctx.globalCompositeOperation = items[i].GCO
+      canvas.ctx.beginPath()
+
+      // Work out the position, rotation, opacity and scale of the item
+      let pos = items[i].currentPosition(progress)
+      let r = items[i].currentRotation(progress)
+      let s = items[i].currentScale(progress)
+      let o = items[i].currentOpacity(progress)
+
+      // Save the current state of the canvas
+      canvas.ctx.save()
+
+      /*
+        If the item is a rectangle or image, make sure the canvas
+        works from the center of the shape (like how it does with circles)
+      */
+      if (items[i] instanceof _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Rectangle"] || items[i] instanceof _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"]) {
+        canvas.ctx.translate(
+          items[i].pos.x + items[i].w / 2,
+          items[i].pos.y + items[i].h / 2
+        )
+      }
+
+      // Rotate the canvas based on the current shape rotation
+      canvas.ctx.rotate(r * Math.PI / 180)
+
+      // Draw the item
+      if (items[i] instanceof _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"]) {
+        canvas.ctx.globalAlpha = o
+        canvas.ctx.drawImage(items[i].image, pos[0], pos[1], s[0], s[1])
+        canvas.ctx.globalAlpha = 1
+      } else {
+        animation.shapes[i].draw(pos, s)
+        canvas.ctx.fillStyle = color__WEBPACK_IMPORTED_MODULE_3___default()(items[i].fill)
+          .alpha(o)
+          .rgb()
+        canvas.ctx.fill()
+      }
+
+      // Restore the canvas to it's original rotation (0)
+      canvas.ctx.restore()
+    }
+  }
+
+  // Looping function for drawing each frame
+  const _draw = () => {
+    // Draw each canvas
+    for (let i = 0; i < canvases.length; i++) {
+      let canvas = canvases[i]
+
+      // Clear the frame completely
+      canvas.ctx.clearRect(
+        0,
+        0,
+        canvas.ctx.canvas.width,
+        canvas.ctx.canvas.height
+      )
+
+      for (let i = 0; i < canvas.animations.length; i++) {
+        let animation = canvas.animations[i]
+
+        if (animation.play) {
+          // Work out the current time
+          const now = window.performance.now()
+
+          // If this is the first frame, set the current time to the start time
+          if (!animation.startTime) {
+            animation.startTime = now
+          }
+
+          // Work out the progress of the animation (0 - 1)
+          let p = (now - animation.startTime) / animation.duration
+          // If the progress has passed one, adjust to be 1
+          if (p > 1) p = 1
+
+          // Set the value of the canvas' progress
+          animation.progress = p
+
+          // Draw the images and shapes
+          _positionItems(animation.images, p, animation, canvas)
+          _positionItems(animation.shapes, p, animation, canvas)
+
+          // If the animation has ended
+          if (p >= 1) {
+            // Reset the start time
+            animation.startTime = null
+            // Reset the progress
+            p = 0
+            // Reset the GCO
+            canvas.ctx.globalCompositeOperation = 'source-over'
+            // Continue playing if animation should loop
+            animation.play = animation.loop
+          }
+        }
+      }
+    }
+
+    nextFrame = window.requestAnimationFrame(_draw)
+  }
+
+  return {
+    // Creates a new canvas
+    addCanvas: obj => {
+      canvases.push(new _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__["Canvas"](obj))
+    },
+
+    addAnimation: obj => {
+      // Make sure we know which canvas we're adding the animatio to
+      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
+        let canvas = typeof obj.canvas === 'number' ? obj.canvas : 0
+        obj.canvases = canvases
+        canvases[canvas].animations.push(new _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__["Animation"](obj))
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Add a new shape
+    addShape: obj => {
+      // Make sure we know which canvas we're adding the shape to
+      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
+        let canvas = typeof obj.canvas === 'number' ? obj.canvas : 0
+        let animation = typeof obj.animation === 'number' ? obj.animation : 0
+        // Make sure we're creating a valid shape
+        if (typeof obj['shape'] === 'string') {
+          obj.canvases = canvases
+          obj.animations = canvases[canvas].animations
+          switch (obj['shape']) {
+            case 'circ':
+              canvases[canvas].animations[animation].shapes.push(
+                new _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Circle"](obj)
+              )
+              break
+
+            case 'rect':
+              canvases[canvas].animations[animation].shapes.push(
+                new _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Rectangle"](obj)
+              )
+              break
+
+            default:
+              throw new Error('Provided shape not valid.')
+          }
+        } else {
+          throw new Error(
+            'Function incorrectly called. Object required with shape property (string).'
+          )
+        }
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Add a new image
+    addImage: obj => {
+      // Make sure we know which canvas we're adding the image to
+      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
+        obj.canvases = canvases
+        canvases[obj.canvas].animations[obj.animation].images.push(
+          new _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"](obj)
+        )
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Remove all the shapes from the specified canvas
+    clearShapes: (canvas, animation) => {
+      canvases[canvas].animations[animation].shapes = []
+    },
+
+    // Remove all the images from the specified canvas
+    clearImages: (canvas, animation) => {
+      canvases[canvas].animations[animation].images = []
+    },
+
+    // Remove all the shapes, images and animations from the specified canvas
+    clearCanvas: canvas => {
+      canvases[canvas].animations = []
+    },
+
+    // Remove all shapes AND images from an animation
+    clearAnimation: (canvas, animation) => {
+      canvases[canvas].animations[animation].shapes = []
+      canvases[canvas].animations[animation].images = []
+    },
+
+    // Run one or all of the canvases
+    run: (canvas, animation) => {
+      if (typeof canvas === 'number' || canvases.length <= 1) {
+        if (typeof canvas !== 'number') canvas = 0
+        window.cancelAnimationFrame(nextFrame)
+
+        if (typeof animation === 'number') {
+          canvases[canvas].animations[animation].play = true
+        } else {
+          for (let i = 0; i < canvases[canvas].animations.length; i++) {
+            canvases[canvas].animations[i].play = true
+          }
+        }
+
+        nextFrame = window.requestAnimationFrame(_draw)
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Stop one or all of the canvases
+    stop: (canvas, animation) => {
+      if (typeof canvas !== 'undefined') {
+        if (typeof animation === 'number') {
+          canvases[canvas].animations[animation].play = false
+        } else {
+          for (let i = 0; i < canvases.length; i++) {
+            canvases[canvas].animations[i].play = false
+          }
+
+          window.cancelAnimationFrame(nextFrame)
+        }
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Get the dimensions of one or all of the canvases
+    getCanvasSize: i => {
+      if (canvases.ctx !== 'undefined') {
+        if (i) {
+          return {
+            width: canvases[i].ctx.canvas.width,
+            height: canvases[i].ctx.canvas.height
+          }
+        } else {
+          let sizes = []
+
+          for (let j = 0; j < canvases.length; j++) {
+            sizes.push({
+              width: canvases[j].ctx.canvas.width,
+              height: canvases[j].ctx.canvas.height
+            })
+          }
+
+          if (sizes.length === 1) return sizes[0]
+          return sizes
+        }
+      }
+      throw new Error('Canvas must be set up before this function is called.')
+    },
+
+    // Get the current progress of an animation
+    getCurrentProgress: (canvas, animation) => {
+      return canvases[canvas].animations[animation].progress
+    },
+
+    // Return the canvases so they can be accessed publically
+    canvases
+  }
+})()
+
+
+
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=main.js.map
