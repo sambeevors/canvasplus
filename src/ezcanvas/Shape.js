@@ -8,16 +8,22 @@ class Shape {
 
     // Start position must be specified, end position defaults to start
     if (
-      (typeof params.position.start === 'object' && typeof params.position.end === 'object') ||
+      (typeof params.position.start === 'object' &&
+        typeof params.position.end === 'object') ||
       typeof params.position.end === 'undefined'
     ) {
       this.pos = {
         start: params.position.start,
-        end: typeof params.position.end === 'object' ? params.position.end : params.position.start
+        end:
+          typeof params.position.end === 'object'
+            ? params.position.end
+            : params.position.start
       }
       this.fill = typeof params.fill === 'string' ? params.fill : '#000000'
     } else {
-      throw new Error('New shapes require a starting position (array: [startX, startY] )')
+      throw new Error(
+        'New shapes require a starting position (array: [startX, startY] )'
+      )
     }
 
     // Rotation defaults to none
@@ -29,12 +35,16 @@ class Shape {
     // End rotation defaults to start
     if (typeof params.rotation === 'object') {
       if (
-        (typeof params.rotation.start === 'number' && typeof params.rotation.end === 'number') ||
+        (typeof params.rotation.start === 'number' &&
+          typeof params.rotation.end === 'number') ||
         typeof params.rotation.end === 'undefined'
       ) {
         this.rot = {
           start: params.rotation.start,
-          end: typeof params.rotation.end === 'number' ? params.rotation.end : params.rotation.start
+          end:
+            typeof params.rotation.end === 'number'
+              ? params.rotation.end
+              : params.rotation.start
         }
       }
     }
@@ -48,12 +58,16 @@ class Shape {
     // End scale defaults to start
     if (typeof params.scale === 'object') {
       if (
-        (typeof params.scale.start === 'number' && typeof params.scale.end === 'number') ||
+        (typeof params.scale.start === 'number' &&
+          typeof params.scale.end === 'number') ||
         typeof params.scale.end === 'undefined'
       ) {
         this.scale = {
           start: params.scale.start,
-          end: typeof params.scale.end === 'number' ? params.scale.end : params.scale.start
+          end:
+            typeof params.scale.end === 'number'
+              ? params.scale.end
+              : params.scale.start
         }
       }
     }
@@ -67,12 +81,16 @@ class Shape {
     // End opacity defaults to start
     if (typeof params.opacity === 'object') {
       if (
-        (typeof params.opacity.start === 'number' && typeof params.opacity.end === 'number') ||
+        (typeof params.opacity.start === 'number' &&
+          typeof params.opacity.end === 'number') ||
         typeof params.opacity.end === 'undefined'
       ) {
         this.opacity = {
           start: params.opacity.start,
-          end: typeof params.opacity.end === 'number' ? params.opacity.end : params.opacity.start
+          end:
+            typeof params.opacity.end === 'number'
+              ? params.opacity.end
+              : params.opacity.start
         }
       }
     }
@@ -82,17 +100,21 @@ class Shape {
   currentPosition(p) {
     const x =
       this.pos.start[0] +
-      (this.pos.end[0] - this.pos.start[0]) * this.animations[this.animation].easing(p)
+      (this.pos.end[0] - this.pos.start[0]) *
+        this.animations[this.animation].easing(p)
     const y =
       this.pos.start[1] +
-      (this.pos.end[1] - this.pos.start[1]) * this.animations[this.animation].easing(p)
+      (this.pos.end[1] - this.pos.start[1]) *
+        this.animations[this.animation].easing(p)
     return [x, y]
   }
 
   // Work out current rotation based on progress
   currentRotation(p) {
     return (
-      this.rot.start + (this.rot.end - this.rot.start) * this.animations[this.animation].easing(p)
+      this.rot.start +
+      (this.rot.end - this.rot.start) *
+        this.animations[this.animation].easing(p)
     )
   }
 
@@ -100,7 +122,8 @@ class Shape {
   currentOpacity(p) {
     return (
       this.opacity.start +
-      (this.opacity.end - this.opacity.start) * this.animations[this.animation].easing(p)
+      (this.opacity.end - this.opacity.start) *
+        this.animations[this.animation].easing(p)
     )
   }
 }
@@ -130,13 +153,9 @@ class Circle extends Shape {
 
   // Draw the circle on the canvas
   draw(pos, r) {
-    this.animations[this.animation].canvases[this.animations[this.animation].canvas].ctx.arc(
-      pos[0],
-      pos[1],
-      r,
-      0,
-      2 * Math.PI
-    )
+    this.animations[this.animation].canvases[
+      this.animations[this.animation].canvas
+    ].ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI)
   }
 }
 
@@ -174,12 +193,9 @@ class Rectangle extends Shape {
 
   // Draw the rectangle on the canvas
   draw(pos, wh) {
-    this.animations[this.animation].canvases[this.animations[this.animation].canvas].ctx.rect(
-      pos[0],
-      pos[1],
-      wh[0],
-      wh[1]
-    )
+    this.animations[this.animation].canvases[
+      this.animations[this.animation].canvas
+    ].ctx.rect(pos[0], pos[1], wh[0], wh[1])
   }
 }
 

@@ -2103,312 +2103,6 @@ module.exports = function isArrayish(obj) {
 
 /***/ }),
 
-/***/ "./src/ezcanvas.js":
-/*!*************************!*\
-  !*** ./src/ezcanvas.js ***!
-  \*************************/
-/*! exports provided: EZCanvas, Ease */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EZCanvas", function() { return EZCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Ease", function() { return Ease; });
-/* harmony import */ var _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ezcanvas/Animation.js */ "./src/ezcanvas/Animation.js");
-/* harmony import */ var _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ezcanvas/Shape.js */ "./src/ezcanvas/Shape.js");
-/* harmony import */ var _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ezcanvas/Image.js */ "./src/ezcanvas/Image.js");
-/* harmony import */ var color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! color */ "./node_modules/color/index.js");
-/* harmony import */ var color__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(color__WEBPACK_IMPORTED_MODULE_3__);
-
-
-
-
-
-
-
-/*
-  The Ease object contains several functions which take the progress,
-  and modify it to create an ease in the animation. These can be applied
-  on a per-canvas basis.
-*/
-const Ease = {
-  inQuad: t => t * t,
-  outQuad: t => t * (2 - t),
-  inOutQuad: t => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
-  inCubic: t => t * t * t,
-  outCubic: t => --t * t * t + 1,
-  inOutCubic: t => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1),
-  inQuart: t => t * t * t * t,
-  outQuart: t => 1 - --t * t * t * t,
-  inOutQuart: t => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t),
-  inQuint: t => t * t * t * t * t,
-  outQuint: t => 1 + --t * t * t * t * t,
-  inOutQuint: t => (t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t)
-}
-
-const EZCanvas = (() => {
-  let canvases = []
-  let nextFrame
-
-  let calledOnce = false
-
-  // Position items on the frame
-  const _positionItems = (items, progress, animation, canvas) => {
-    // Loop through all the items (items are either shapes or images)
-    for (let i = 0; i < items.length; i++) {
-      // console.log(`Positioning ${items[i].constructor.name} on canvas ${animation.canvas} and progress ${animation.progress}...`)
-
-      // Set the GCO
-      canvas.ctx.globalCompositeOperation = items[i].GCO
-      canvas.ctx.beginPath()
-
-      // Work out the position, rotation, opacity and scale of the item
-      let pos = items[i].currentPosition(progress)
-      let r = items[i].currentRotation(progress)
-      let s = items[i].currentScale(progress)
-      let o = items[i].currentOpacity(progress)
-
-      // Save the current state of the canvas
-      canvas.ctx.save()
-
-      /*
-        If the item is a rectangle or image, make sure the canvas
-        works from the center of the shape (like how it does with circles)
-      */
-      if (items[i] instanceof _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Rectangle"] || items[i] instanceof _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"]) {
-        canvas.ctx.translate(items[i].pos.x + items[i].w / 2, items[i].pos.y + items[i].h / 2)
-      }
-
-      // Rotate the canvas based on the current shape rotation
-      canvas.ctx.rotate(r * Math.PI / 180)
-
-      // Draw the item
-      if (items[i] instanceof _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"]) {
-        canvas.ctx.globalAlpha = o
-        canvas.ctx.drawImage(items[i].image, pos[0], pos[1], s[0], s[1])
-        canvas.ctx.globalAlpha = 1
-      } else {
-        animation.shapes[i].draw(pos, s)
-        canvas.ctx.fillStyle = color__WEBPACK_IMPORTED_MODULE_3___default()(items[i].fill)
-          .alpha(o)
-          .rgb()
-        canvas.ctx.fill()
-      }
-
-      // Restore the canvas to it's original rotation (0)
-      canvas.ctx.restore()
-    }
-  }
-
-  // Looping function for drawing each frame
-  const _draw = () => {
-    // Draw each canvas
-    for (let i = 0; i < canvases.length; i++) {
-      let canvas = canvases[i]
-
-      // Clear the frame completely
-      canvas.ctx.clearRect(0, 0, canvas.ctx.canvas.width, canvas.ctx.canvas.height)
-
-      for (let i = 0; i < canvas.animations.length; i++) {
-        let animation = canvas.animations[i]
-
-        if (animation.play) {
-          // Work out the current time
-          const now = window.performance.now()
-
-          // If this is the first frame, set the current time to the start time
-          if (!animation.startTime) {
-            animation.startTime = now
-          }
-
-          // Work out the progress of the animation (0 - 1)
-          let p = (now - animation.startTime) / animation.duration
-          // If the progress has passed one, adjust to be 1
-          if (p > 1) p = 1
-
-          // Set the value of the canvas' progress
-          animation.progress = p
-
-          // Draw the images and shapes
-          _positionItems(animation.images, p, animation, canvas)
-          _positionItems(animation.shapes, p, animation, canvas)
-
-          // If the animation has ended
-          if (p >= 1) {
-            // Reset the start time
-            animation.startTime = null
-            // Reset the progress
-            p = 0
-            // Reset the GCO
-            canvas.ctx.globalCompositeOperation = 'source-over'
-            // Continue playing if animation should loop
-            animation.play = animation.loop
-          }
-        }
-      }
-    }
-
-    nextFrame = window.requestAnimationFrame(_draw)
-  }
-
-  return {
-    // Creates a new canvas
-    addCanvas: obj => {
-      canvases.push(new _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__["Canvas"](obj))
-    },
-
-    addAnimation: obj => {
-      // Make sure we know which canvas we're adding the animatio to
-      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
-        let canvas = typeof obj.canvas === 'number' ? obj.canvas : 0
-        obj.canvases = canvases
-        canvases[canvas].animations.push(new _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__["Animation"](obj))
-      } else {
-        throw new Error('Canvas ID is not defined.')
-      }
-    },
-
-    // Add a new shape
-    addShape: obj => {
-      // Make sure we know which canvas we're adding the shape to
-      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
-        let canvas = typeof obj.canvas === 'number' ? obj.canvas : 0
-        let animation = typeof obj.animation === 'number' ? obj.animation : 0
-        // Make sure we're creating a valid shape
-        if (typeof obj['shape'] === 'string') {
-          obj.canvases = canvases
-          obj.animations = canvases[canvas].animations
-          switch (obj['shape']) {
-            case 'circ':
-              canvases[canvas].animations[animation].shapes.push(new _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Circle"](obj))
-              break
-
-            case 'rect':
-              canvases[canvas].animations[animation].shapes.push(new _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Rectangle"](obj))
-              break
-
-            default:
-              throw new Error('Provided shape not valid.')
-          }
-        } else {
-          throw new Error(
-            'Function incorrectly called. Object required with shape property (string).'
-          )
-        }
-      } else {
-        throw new Error('Canvas ID is not defined.')
-      }
-    },
-
-    // Add a new image
-    addImage: obj => {
-      // Make sure we know which canvas we're adding the image to
-      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
-        obj.canvases = canvases
-        canvases[obj.canvas].animations[obj.animation].images.push(new _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"](obj))
-      } else {
-        throw new Error('Canvas ID is not defined.')
-      }
-    },
-
-    // Remove all the shapes from the specified canvas
-    clearShapes: (canvas, animation) => {
-      canvases[canvas].animations[animation].shapes = []
-    },
-
-    // Remove all the images from the specified canvas
-    clearImages: (canvas, animation) => {
-      canvases[canvas].animations[animation].images = []
-    },
-
-    // Remove all the shapes, images and animations from the specified canvas
-    clearCanvas: canvas => {
-      canvases[canvas].animations = []
-    },
-
-    // Remove all shapes AND images from an animation
-    clearAnimation: (canvas, animation) => {
-      canvases[canvas].animations[animation].shapes = []
-      canvases[canvas].animations[animation].images = []
-    },
-
-    // Run one or all of the canvases
-    run: (canvas, animation) => {
-      if (typeof canvas === 'number' || canvases.length <= 1) {
-        if (typeof canvas !== 'number') canvas = 0
-        window.cancelAnimationFrame(nextFrame)
-
-        if (typeof animation === 'number') {
-          canvases[canvas].animations[animation].play = true
-        } else {
-          for (let i = 0; i < canvases[canvas].animations.length; i++) {
-            canvases[canvas].animations[i].play = true
-          }
-        }
-
-        nextFrame = window.requestAnimationFrame(_draw)
-      } else {
-        throw new Error('Canvas ID is not defined.')
-      }
-    },
-
-    // Stop one or all of the canvases
-    stop: (canvas, animation) => {
-      if (typeof canvas !== 'undefined') {
-        if (typeof animation === 'number') {
-          canvases[canvas].animations[animation].play = false
-        } else {
-          for (let i = 0; i < canvases.length; i++) {
-            canvases[canvas].animations[i].play = false
-          }
-
-          window.cancelAnimationFrame(nextFrame)
-        }
-      } else {
-        throw new Error('Canvas ID is not defined.')
-      }
-    },
-
-    // Get the dimensions of one or all of the canvases
-    getCanvasSize: i => {
-      if (canvases.ctx !== 'undefined') {
-        if (i) {
-          return {
-            width: canvases[i].ctx.canvas.width,
-            height: canvases[i].ctx.canvas.height
-          }
-        } else {
-          let sizes = []
-
-          for (let j = 0; j < canvases.length; j++) {
-            sizes.push({
-              width: canvases[j].ctx.canvas.width,
-              height: canvases[j].ctx.canvas.height
-            })
-          }
-
-          if (sizes.length === 1) return sizes[0]
-          return sizes
-        }
-      }
-      throw new Error('Canvas must be set up before this function is called.')
-    },
-
-    // Get the current progress of an animation
-    getCurrentProgress: (canvas, animation) => {
-      return canvases[canvas].animations[animation].progress
-    },
-
-    // Return the canvases so they can be accessed publically
-    canvases
-  }
-})()
-
-
-
-
-/***/ }),
-
 /***/ "./src/ezcanvas/Animation.js":
 /*!***********************************!*\
   !*** ./src/ezcanvas/Animation.js ***!
@@ -2511,35 +2205,47 @@ __webpack_require__.r(__webpack_exports__);
 // We use CanvasImage because Image is a global object
 class CanvasImage {
   // Build an animation based of the passed parameters
-  constructor (params) {
+  constructor(params) {
     // GCO defaults to source-over (normal)
-    this.GCO = (typeof params.GCO === 'string') ? params.GCO : 'source-over'
+    this.GCO = typeof params.GCO === 'string' ? params.GCO : 'source-over'
     // Creates a new image
     this.image = new window.Image()
     // Width and height default to whatever the dimensions of the passed image are
-    this.w = (typeof params.w === 'number') ? params.w : this.image.width
-    this.h = (typeof params.h === 'number') ? params.h : this.image.height
+    this.w = typeof params.w === 'number' ? params.w : this.image.width
+    this.h = typeof params.h === 'number' ? params.h : this.image.height
     // Check if image has loaded
     this.loaded = false
     this.image.onLoad = () => {
       this.loaded = true
     }
     // If no image src is set, put a placeholder in it's place
-    this.image.src = (typeof params.src === 'string') ? params.src : 'http://placehold.it/500x500?text=Image+Must+Be+A+String'
+    this.image.src =
+      typeof params.src === 'string'
+        ? params.src
+        : 'http://placehold.it/500x500?text=Image+Must+Be+A+String'
     this.canvases = params.canvases
-    this.canvas = (typeof params.canvas === 'number') ? params.canvas : 0
+    this.canvas = typeof params.canvas === 'number' ? params.canvas : 0
     this.animations = params.animations
-    this.animation = (typeof params.animation === 'number') ? params.animation : 0
+    this.animation = typeof params.animation === 'number' ? params.animation : 0
 
     // Start position must be specified, end position defaults to start
-    if (typeof params.position.start === 'object' && typeof params.position.end === 'object' || typeof params.position.end === 'undefined') {
+    if (
+      (typeof params.position.start === 'object' &&
+        typeof params.position.end === 'object') ||
+      typeof params.position.end === 'undefined'
+    ) {
       this.pos = {
         start: params.position.start,
-        end: (typeof params.position.end === 'object') ? params.position.end : params.position.start
+        end:
+          typeof params.position.end === 'object'
+            ? params.position.end
+            : params.position.start
       }
-      this.fill = (typeof params.fill === 'string') ? params.fill : '#000000'
+      this.fill = typeof params.fill === 'string' ? params.fill : '#000000'
     } else {
-      throw new Error('New shapes require a starting position (array: [startX, startY] )')
+      throw new Error(
+        'New shapes require a starting position (array: [startX, startY])'
+      )
     }
 
     // Rotation defaults to none
@@ -2550,10 +2256,17 @@ class CanvasImage {
 
     // End rotation defaults to start
     if (typeof params.rotation === 'object') {
-      if (typeof params.rotation.start === 'number' && typeof params.rotation.end === 'number' || typeof params.rotation.end === 'undefined') {
+      if (
+        (typeof params.rotation.start === 'number' &&
+          typeof params.rotation.end === 'number') ||
+        typeof params.rotation.end === 'undefined'
+      ) {
         this.rot = {
           start: params.rotation.start,
-          end: (typeof params.rotation.end === 'number') ? params.rotation.end : params.rotation.start
+          end:
+            typeof params.rotation.end === 'number'
+              ? params.rotation.end
+              : params.rotation.start
         }
       }
     }
@@ -2566,10 +2279,17 @@ class CanvasImage {
 
     // End scale defaults to start
     if (typeof params.scale === 'object') {
-      if (typeof params.scale.start === 'number' && typeof params.scale.end === 'number' || typeof params.scale.end === 'undefined') {
+      if (
+        (typeof params.scale.start === 'number' &&
+          typeof params.scale.end === 'number') ||
+        typeof params.scale.end === 'undefined'
+      ) {
         this.scale = {
           start: params.scale.start,
-          end: (typeof params.scale.end === 'number') ? params.scale.end : params.scale.start
+          end:
+            typeof params.scale.end === 'number'
+              ? params.scale.end
+              : params.scale.start
         }
       }
     }
@@ -2582,43 +2302,74 @@ class CanvasImage {
 
     // End opacity defaults to start
     if (typeof params.opacity === 'object') {
-      if (typeof params.opacity.start === 'number' && typeof params.opacity.end === 'number' || typeof params.opacity.end === 'undefined') {
+      if (
+        (typeof params.opacity.start === 'number' &&
+          typeof params.opacity.end === 'number') ||
+        typeof params.opacity.end === 'undefined'
+      ) {
         this.opacity = {
           start: params.opacity.start,
-          end: (typeof params.opacity.end === 'number') ? params.opacity.end : params.opacity.start
+          end:
+            typeof params.opacity.end === 'number'
+              ? params.opacity.end
+              : params.opacity.start
         }
       }
     }
   }
 
   // Work out current position based on progress
-  currentPosition (p) {
-    const x = this.pos.start[0] + (this.pos.end[0] - this.pos.start[0]) * this.animations[this.animation].easing(p)
-    const y = this.pos.start[1] + (this.pos.end[1] - this.pos.start[1]) * this.animations[this.animation].easing(p)
+  currentPosition(p) {
+    const x =
+      this.pos.start[0] +
+      (this.pos.end[0] - this.pos.start[0]) *
+        this.animations[this.animation].easing(p)
+    const y =
+      this.pos.start[1] +
+      (this.pos.end[1] - this.pos.start[1]) *
+        this.animations[this.animation].easing(p)
     return [x, y]
   }
 
   // Work out current rotation based on progress
-  currentRotation (p) {
-    return this.rot.start + (this.rot.end - this.rot.start) * this.animations[this.animation].easing(p)
+  currentRotation(p) {
+    return (
+      this.rot.start +
+      (this.rot.end - this.rot.start) *
+        this.animations[this.animation].easing(p)
+    )
   }
 
   // Work out current scale based on progress
-  currentScale (p) {
+  currentScale(p) {
     let w = this.w * this.scale.start
     let h = this.h * this.scale.start
 
     if (this.scale.start !== this.scale.end) {
-      w = this.w + this.w * ((this.scale.start + (this.scale.end - this.scale.start)) * this.animations[this.animation].easing(p) - this.animations[this.animation].easing(p))
-      h = this.h + this.h * ((this.scale.start + (this.scale.end - this.scale.start)) * this.animations[this.animation].easing(p) - this.animations[this.animation].easing(p))
+      w =
+        this.w +
+        this.w *
+          ((this.scale.start + (this.scale.end - this.scale.start)) *
+            this.animations[this.animation].easing(p) -
+            this.animations[this.animation].easing(p))
+      h =
+        this.h +
+        this.h *
+          ((this.scale.start + (this.scale.end - this.scale.start)) *
+            this.animations[this.animation].easing(p) -
+            this.animations[this.animation].easing(p))
     }
 
     return [w, h]
   }
 
   // Work out current opacity based on progress
-  currentOpacity (p) {
-    return this.opacity.start + (this.opacity.end - this.opacity.start) * this.animations[this.animation].easing(p)
+  currentOpacity(p) {
+    return (
+      this.opacity.start +
+      (this.opacity.end - this.opacity.start) *
+        this.animations[this.animation].easing(p)
+    )
   }
 }
 
@@ -2646,16 +2397,22 @@ class Shape {
 
     // Start position must be specified, end position defaults to start
     if (
-      (typeof params.position.start === 'object' && typeof params.position.end === 'object') ||
+      (typeof params.position.start === 'object' &&
+        typeof params.position.end === 'object') ||
       typeof params.position.end === 'undefined'
     ) {
       this.pos = {
         start: params.position.start,
-        end: typeof params.position.end === 'object' ? params.position.end : params.position.start
+        end:
+          typeof params.position.end === 'object'
+            ? params.position.end
+            : params.position.start
       }
       this.fill = typeof params.fill === 'string' ? params.fill : '#000000'
     } else {
-      throw new Error('New shapes require a starting position (array: [startX, startY] )')
+      throw new Error(
+        'New shapes require a starting position (array: [startX, startY] )'
+      )
     }
 
     // Rotation defaults to none
@@ -2667,12 +2424,16 @@ class Shape {
     // End rotation defaults to start
     if (typeof params.rotation === 'object') {
       if (
-        (typeof params.rotation.start === 'number' && typeof params.rotation.end === 'number') ||
+        (typeof params.rotation.start === 'number' &&
+          typeof params.rotation.end === 'number') ||
         typeof params.rotation.end === 'undefined'
       ) {
         this.rot = {
           start: params.rotation.start,
-          end: typeof params.rotation.end === 'number' ? params.rotation.end : params.rotation.start
+          end:
+            typeof params.rotation.end === 'number'
+              ? params.rotation.end
+              : params.rotation.start
         }
       }
     }
@@ -2686,12 +2447,16 @@ class Shape {
     // End scale defaults to start
     if (typeof params.scale === 'object') {
       if (
-        (typeof params.scale.start === 'number' && typeof params.scale.end === 'number') ||
+        (typeof params.scale.start === 'number' &&
+          typeof params.scale.end === 'number') ||
         typeof params.scale.end === 'undefined'
       ) {
         this.scale = {
           start: params.scale.start,
-          end: typeof params.scale.end === 'number' ? params.scale.end : params.scale.start
+          end:
+            typeof params.scale.end === 'number'
+              ? params.scale.end
+              : params.scale.start
         }
       }
     }
@@ -2705,12 +2470,16 @@ class Shape {
     // End opacity defaults to start
     if (typeof params.opacity === 'object') {
       if (
-        (typeof params.opacity.start === 'number' && typeof params.opacity.end === 'number') ||
+        (typeof params.opacity.start === 'number' &&
+          typeof params.opacity.end === 'number') ||
         typeof params.opacity.end === 'undefined'
       ) {
         this.opacity = {
           start: params.opacity.start,
-          end: typeof params.opacity.end === 'number' ? params.opacity.end : params.opacity.start
+          end:
+            typeof params.opacity.end === 'number'
+              ? params.opacity.end
+              : params.opacity.start
         }
       }
     }
@@ -2720,17 +2489,21 @@ class Shape {
   currentPosition(p) {
     const x =
       this.pos.start[0] +
-      (this.pos.end[0] - this.pos.start[0]) * this.animations[this.animation].easing(p)
+      (this.pos.end[0] - this.pos.start[0]) *
+        this.animations[this.animation].easing(p)
     const y =
       this.pos.start[1] +
-      (this.pos.end[1] - this.pos.start[1]) * this.animations[this.animation].easing(p)
+      (this.pos.end[1] - this.pos.start[1]) *
+        this.animations[this.animation].easing(p)
     return [x, y]
   }
 
   // Work out current rotation based on progress
   currentRotation(p) {
     return (
-      this.rot.start + (this.rot.end - this.rot.start) * this.animations[this.animation].easing(p)
+      this.rot.start +
+      (this.rot.end - this.rot.start) *
+        this.animations[this.animation].easing(p)
     )
   }
 
@@ -2738,7 +2511,8 @@ class Shape {
   currentOpacity(p) {
     return (
       this.opacity.start +
-      (this.opacity.end - this.opacity.start) * this.animations[this.animation].easing(p)
+      (this.opacity.end - this.opacity.start) *
+        this.animations[this.animation].easing(p)
     )
   }
 }
@@ -2768,13 +2542,9 @@ class Circle extends Shape {
 
   // Draw the circle on the canvas
   draw(pos, r) {
-    this.animations[this.animation].canvases[this.animations[this.animation].canvas].ctx.arc(
-      pos[0],
-      pos[1],
-      r,
-      0,
-      2 * Math.PI
-    )
+    this.animations[this.animation].canvases[
+      this.animations[this.animation].canvas
+    ].ctx.arc(pos[0], pos[1], r, 0, 2 * Math.PI)
   }
 }
 
@@ -2812,12 +2582,9 @@ class Rectangle extends Shape {
 
   // Draw the rectangle on the canvas
   draw(pos, wh) {
-    this.animations[this.animation].canvases[this.animations[this.animation].canvas].ctx.rect(
-      pos[0],
-      pos[1],
-      wh[0],
-      wh[1]
-    )
+    this.animations[this.animation].canvases[
+      this.animations[this.animation].canvas
+    ].ctx.rect(pos[0], pos[1], wh[0], wh[1])
   }
 }
 
@@ -2830,77 +2597,316 @@ class Rectangle extends Shape {
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no exports provided */
+/*! exports provided: EZCanvas, Ease */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ezcanvas.js */ "./src/ezcanvas.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EZCanvas", function() { return EZCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Ease", function() { return Ease; });
+/* harmony import */ var _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ezcanvas/Animation.js */ "./src/ezcanvas/Animation.js");
+/* harmony import */ var _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ezcanvas/Shape.js */ "./src/ezcanvas/Shape.js");
+/* harmony import */ var _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ezcanvas/Image.js */ "./src/ezcanvas/Image.js");
+/* harmony import */ var color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! color */ "./node_modules/color/index.js");
+/* harmony import */ var color__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(color__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
 
-document.addEventListener('DOMContentLoaded', event => {
-    _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"].addCanvas({
-        size: [300, 150]
-    })
 
-    _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"].addAnimation({
-        duration: 900,
-        easing: _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["Ease"].outQuad,
-        loop: true
-    })
 
-    _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"].addShape({
-        animation: 0,
-        shape: 'circ',
-        position: {
-            start: [15, 15],
-            end: [100, 100]
+
+/*
+  The Ease object contains several functions which take the progress,
+  and modify it to create an ease in the animation. These can be applied
+  on a per-canvas basis.
+*/
+const Ease = {
+  inQuad: t => t * t,
+  outQuad: t => t * (2 - t),
+  inOutQuad: t => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
+  inCubic: t => t * t * t,
+  outCubic: t => --t * t * t + 1,
+  inOutCubic: t =>
+    t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
+  inQuart: t => t * t * t * t,
+  outQuart: t => 1 - --t * t * t * t,
+  inOutQuart: t => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t),
+  inQuint: t => t * t * t * t * t,
+  outQuint: t => 1 + --t * t * t * t * t,
+  inOutQuint: t =>
+    t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t
+}
+
+const EZCanvas = (() => {
+  let canvases = []
+  let nextFrame
+
+  // Position items on the frame
+  const _positionItems = (items, progress, animation, canvas) => {
+    // Loop through all the items (items are either shapes or images)
+    for (let i = 0; i < items.length; i++) {
+      // Set the GCO
+      canvas.ctx.globalCompositeOperation = items[i].GCO
+      canvas.ctx.beginPath()
+
+      // Work out the position, rotation, opacity and scale of the item
+      let pos = items[i].currentPosition(progress)
+      let r = items[i].currentRotation(progress)
+      let s = items[i].currentScale(progress)
+      let o = items[i].currentOpacity(progress)
+
+      // Save the current state of the canvas
+      canvas.ctx.save()
+
+      /*
+        If the item is a rectangle or image, make sure the canvas
+        works from the center of the shape (like how it does with circles)
+      */
+      if (items[i] instanceof _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Rectangle"] || items[i] instanceof _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"]) {
+        canvas.ctx.translate(
+          items[i].pos.x + items[i].w / 2,
+          items[i].pos.y + items[i].h / 2
+        )
+      }
+
+      // Rotate the canvas based on the current shape rotation
+      canvas.ctx.rotate(r * Math.PI / 180)
+
+      // Draw the item
+      if (items[i] instanceof _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"]) {
+        canvas.ctx.globalAlpha = o
+        canvas.ctx.drawImage(items[i].image, pos[0], pos[1], s[0], s[1])
+        canvas.ctx.globalAlpha = 1
+      } else {
+        animation.shapes[i].draw(pos, s)
+        canvas.ctx.fillStyle = color__WEBPACK_IMPORTED_MODULE_3___default()(items[i].fill)
+          .alpha(o)
+          .rgb()
+        canvas.ctx.fill()
+      }
+
+      // Restore the canvas to it's original rotation (0)
+      canvas.ctx.restore()
+    }
+  }
+
+  // Looping function for drawing each frame
+  const _draw = () => {
+    // Draw each canvas
+    for (let i = 0; i < canvases.length; i++) {
+      let canvas = canvases[i]
+
+      // Clear the frame completely
+      canvas.ctx.clearRect(
+        0,
+        0,
+        canvas.ctx.canvas.width,
+        canvas.ctx.canvas.height
+      )
+
+      for (let i = 0; i < canvas.animations.length; i++) {
+        let animation = canvas.animations[i]
+
+        if (animation.play) {
+          // Work out the current time
+          const now = window.performance.now()
+
+          // If this is the first frame, set the current time to the start time
+          if (!animation.startTime) {
+            animation.startTime = now
+          }
+
+          // Work out the progress of the animation (0 - 1)
+          let p = (now - animation.startTime) / animation.duration
+          // If the progress has passed one, adjust to be 1
+          if (p > 1) p = 1
+
+          // Set the value of the canvas' progress
+          animation.progress = p
+
+          // Draw the images and shapes
+          _positionItems(animation.images, p, animation, canvas)
+          _positionItems(animation.shapes, p, animation, canvas)
+
+          // If the animation has ended
+          if (p >= 1) {
+            // Reset the start time
+            animation.startTime = null
+            // Reset the progress
+            p = 0
+            // Reset the GCO
+            canvas.ctx.globalCompositeOperation = 'source-over'
+            // Continue playing if animation should loop
+            animation.play = animation.loop
+          }
         }
-    })
+      }
+    }
 
-    console.log(_ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"])
+    nextFrame = window.requestAnimationFrame(_draw)
+  }
 
-    _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"].run(0, 0)
+  return {
+    // Creates a new canvas
+    addCanvas: obj => {
+      canvases.push(new _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__["Canvas"](obj))
+    },
 
-    setTimeout(() => {
-        _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"].addAnimation({
-            duration: 2500,
-            loop: true,
-            easing: _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["Ease"].inOutCubic
-        })
+    addAnimation: obj => {
+      // Make sure we know which canvas we're adding the animatio to
+      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
+        let canvas = typeof obj.canvas === 'number' ? obj.canvas : 0
+        obj.canvases = canvases
+        canvases[canvas].animations.push(new _ezcanvas_Animation_js__WEBPACK_IMPORTED_MODULE_0__["Animation"](obj))
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
 
-        _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"].addShape({
-            animation: 1,
-            shape: 'rect',
-            position: {
-                start: [100, 250],
-                end: [10, 15]
-            },
-            fill: 'red',
-            GCO: 'source-atop'
-        })
+    // Add a new shape
+    addShape: obj => {
+      // Make sure we know which canvas we're adding the shape to
+      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
+        let canvas = typeof obj.canvas === 'number' ? obj.canvas : 0
+        let animation = typeof obj.animation === 'number' ? obj.animation : 0
+        // Make sure we're creating a valid shape
+        if (typeof obj['shape'] === 'string') {
+          obj.canvases = canvases
+          obj.animations = canvases[canvas].animations
+          switch (obj['shape']) {
+            case 'circ':
+              canvases[canvas].animations[animation].shapes.push(
+                new _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Circle"](obj)
+              )
+              break
 
-        _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"].run(0, 1)
+            case 'rect':
+              canvases[canvas].animations[animation].shapes.push(
+                new _ezcanvas_Shape_js__WEBPACK_IMPORTED_MODULE_1__["Rectangle"](obj)
+              )
+              break
 
-        setTimeout(() => {
-            _ezcanvas_js__WEBPACK_IMPORTED_MODULE_0__["EZCanvas"].addShape({
-                animation: 1,
-                shape: 'circ',
-                r: 15,
-                fill: 'rgba(0, 255, 0, .5)',
-                position: {
-                    start: [200, 15],
-                    end: [0, 15]
-                },
-                opacity: {
-                    start: 0.5
-                }
+            default:
+              throw new Error('Provided shape not valid.')
+          }
+        } else {
+          throw new Error(
+            'Function incorrectly called. Object required with shape property (string).'
+          )
+        }
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Add a new image
+    addImage: obj => {
+      // Make sure we know which canvas we're adding the image to
+      if (typeof obj.canvas === 'number' || canvases.length <= 1) {
+        obj.canvases = canvases
+        canvases[obj.canvas].animations[obj.animation].images.push(
+          new _ezcanvas_Image_js__WEBPACK_IMPORTED_MODULE_2__["default"](obj)
+        )
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Remove all the shapes from the specified canvas
+    clearShapes: (canvas, animation) => {
+      canvases[canvas].animations[animation].shapes = []
+    },
+
+    // Remove all the images from the specified canvas
+    clearImages: (canvas, animation) => {
+      canvases[canvas].animations[animation].images = []
+    },
+
+    // Remove all the shapes, images and animations from the specified canvas
+    clearCanvas: canvas => {
+      canvases[canvas].animations = []
+    },
+
+    // Remove all shapes AND images from an animation
+    clearAnimation: (canvas, animation) => {
+      canvases[canvas].animations[animation].shapes = []
+      canvases[canvas].animations[animation].images = []
+    },
+
+    // Run one or all of the canvases
+    run: (canvas, animation) => {
+      if (typeof canvas === 'number' || canvases.length <= 1) {
+        if (typeof canvas !== 'number') canvas = 0
+        window.cancelAnimationFrame(nextFrame)
+
+        if (typeof animation === 'number') {
+          canvases[canvas].animations[animation].play = true
+        } else {
+          for (let i = 0; i < canvases[canvas].animations.length; i++) {
+            canvases[canvas].animations[i].play = true
+          }
+        }
+
+        nextFrame = window.requestAnimationFrame(_draw)
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Stop one or all of the canvases
+    stop: (canvas, animation) => {
+      if (typeof canvas !== 'undefined') {
+        if (typeof animation === 'number') {
+          canvases[canvas].animations[animation].play = false
+        } else {
+          for (let i = 0; i < canvases.length; i++) {
+            canvases[canvas].animations[i].play = false
+          }
+
+          window.cancelAnimationFrame(nextFrame)
+        }
+      } else {
+        throw new Error('Canvas ID is not defined.')
+      }
+    },
+
+    // Get the dimensions of one or all of the canvases
+    getCanvasSize: i => {
+      if (canvases.ctx !== 'undefined') {
+        if (i) {
+          return {
+            width: canvases[i].ctx.canvas.width,
+            height: canvases[i].ctx.canvas.height
+          }
+        } else {
+          let sizes = []
+
+          for (let j = 0; j < canvases.length; j++) {
+            sizes.push({
+              width: canvases[j].ctx.canvas.width,
+              height: canvases[j].ctx.canvas.height
             })
-        }, 2000)
-    }, 5000)
-})
+          }
+
+          if (sizes.length === 1) return sizes[0]
+          return sizes
+        }
+      }
+      throw new Error('Canvas must be set up before this function is called.')
+    },
+
+    // Get the current progress of an animation
+    getCurrentProgress: (canvas, animation) => {
+      return canvases[canvas].animations[animation].progress
+    },
+
+    // Return the canvases so they can be accessed publically
+    canvases
+  }
+})()
+
+
 
 
 /***/ })
