@@ -1,5 +1,5 @@
 {
-  "name": "ez-canvas",
+  "name": "canvasplus",
   "version": "1.0.0",
   "description": "A JavaScript library for creating animations simply within HTML5 canvas",
   "main": "dist/index.js",
