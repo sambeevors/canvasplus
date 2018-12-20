@@ -1,6 +1,8 @@
-# ez-canvas
+# canvasplus
 
-A JavaScript library for creating animations simply within HTML5 canvas
+[![GitHub issues](https://img.shields.io/github/issues/sambeevors/canvasplus.svg)](https://github.com/sambeevors/canvasplus/issues) [![GitHub stars](https://img.shields.io/github/stars/sambeevors/canvasplus.svg)](https://github.com/sambeevors/canvasplus/stargazers) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
+
+A JavaScript library for creating animations simply within HTML5 canvas.
 
 ## Table of Contents
 
@@ -11,21 +13,35 @@ A JavaScript library for creating animations simply within HTML5 canvas
 
 ## Installation
 
-Install dependencies with `yarn` and run `yarn dev` to get started.
+Can be installed via npm or yarn
+
+```shell
+npm i @sambeevors/canvasplus
+```
+
+```shell
+yarn add @sambeevors/canvasplus
+```
 
 ## Usage
 
-_For more information please refer to the wiki_
-
-To get started, you first need to import `ezcanvas` and create a new canvas
+To get started, you first need to import `canvasplus` and create a new canvas
 
 ```javascript
-import { EZCanvas, Ease } from 'ezcanvas'
+import { CanvasPlus, Ease } from 'canvasplus'
 ```
 
 ```javascript
-EZCanvas.addCanvas({
-  size: [300, 150],
+CanvasPlus.addCanvas({
+  el: '#canvas',
+  size: [300, 150]
+})
+```
+
+Add an animation
+
+```javascript
+CanvasPlus.addAnimation({
   duration: 900,
   easing: Ease.outQuad,
   loop: true
@@ -35,11 +51,13 @@ EZCanvas.addCanvas({
 Then simply add a shape
 
 ```javascript
-EZCanvas.addShape({
-  shape: 'circ'
+CanvasPlus.addShape({
+  shape: 'rect',
+  w: 100,
+  h: 100,
   position: {
-    start: [15, 15],
-    end: [100, 100]
+    start: [0, 0],
+    end: [300, 150]
   }
 })
 ```
@@ -47,20 +65,27 @@ EZCanvas.addShape({
 You can also add images to the animation in a similar way
 
 ```javascript
-EZCanvas.addImage({
+CanvasPlus.addImage({
   src: 'example.jpg',
-  w: 20
+  w: 50,
   h: 75,
   position: {
-    start: [25, 50]
+    start: [150, 150]
   }
 })
 ```
 
+Once you are ready you can start your animation
+
+```javascript
+CanvasPlus.run()
+```
+
 ## Contributing
 
-Contributions are welcome!
-Feel free to make a PR, this project still has a long way to go.
+Contributions are welcome! There's so much I want to do with this project but struggle to find the time to do it. If there's any features you want me to add, open an issue or even have a go yourself! PRs are always welcome.
+
+To get the project running locally, simply install dependencies with `yarn`.
 
 ## License
 

@@ -27,7 +27,7 @@ const Ease = {
     t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t
 }
 
-const EZCanvas = (() => {
+const CanvasPlus = (() => {
   let canvases = []
   let nextFrame
 
@@ -295,4 +295,4 @@ const EZCanvas = (() => {
   }
 })()
 
-export { EZCanvas, Ease }
+export { CanvasPlus as default, Ease }
