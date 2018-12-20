@@ -9,7 +9,7 @@
     "build": "microbundle --strict"
   },
   "author": "@sambeevors",
-  "license": "ISC",
+  "license": "MIT",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
