@@ -1,8 +1,8 @@
 'use strict'
 
-import { Canvas, Animation } from './ezcanvas/Animation.js'
-import { Circle, Rectangle } from './ezcanvas/Shape.js'
-import CanvasImage from './ezcanvas/Image.js'
+import { Canvas, Animation } from './classes/Animation.js'
+import { Circle, Rectangle } from './classes/Shape.js'
+import CanvasImage from './classes/Image.js'
 import Color from 'color'
 
 /*
@@ -60,7 +60,7 @@ const EZCanvas = (() => {
       }
 
       // Rotate the canvas based on the current shape rotation
-      canvas.ctx.rotate(r * Math.PI / 180)
+      canvas.ctx.rotate((r * Math.PI) / 180)
 
       // Draw the item
       if (items[i] instanceof CanvasImage) {

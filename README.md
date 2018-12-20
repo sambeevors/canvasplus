@@ -1,27 +1,28 @@
-
 # ez-canvas
+
 A JavaScript library for creating animations simply within HTML5 canvas
 
-Table of Contents
----
-* [Installation](#installation)
-* [Usage](#usage)
-* [Contributing](#contributing)
-* [License](#license)
+## Table of Contents
 
-Installation
----
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-Run `npm run build` to get started. This will install node dependencies and build using webpack.
+## Installation
 
-Usage
----
-*For more information please refer to the wiki*
+Install dependencies with `yarn` and run `yarn dev` to get started.
 
-To get started, you first need to import the repository and create a new canvas
+## Usage
+
+_For more information please refer to the wiki_
+
+To get started, you first need to import `ezcanvas` and create a new canvas
+
 ```javascript
 import { EZCanvas, Ease } from 'ezcanvas'
 ```
+
 ```javascript
 EZCanvas.addCanvas({
   size: [300, 150],
@@ -56,11 +57,11 @@ EZCanvas.addImage({
 })
 ```
 
-Contributing
----
+## Contributing
+
 Contributions are welcome!
 Feel free to make a PR, this project still has a long way to go.
 
-License
----
+## License
+
 This package is covered by the [MIT License](https://opensource.org/licenses/MIT).
