@@ -1,6 +1,6 @@
 {
   "name": "@sambeevors/canvasplus",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A JavaScript library for creating animations simply within HTML5 canvas",
   "main": "dist/index.js",
   "source": "src/index.js",
